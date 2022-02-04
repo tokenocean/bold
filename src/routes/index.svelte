@@ -37,16 +37,18 @@
   onDestroy(() => clearInterval(interval));
 </script>
 
-<div class="flex header-container mx-auto justify-center marg-bottom">
+<div class="flex header-container mx-auto justify-center marg-bottom p-12">
   <div class="header text-center">
-    <h1 class="text-left md:text-center md:w-full">
-      {branding.projectName}
-      <br />digital art
+    <h1 class="text-white text-left md:text-center md:w-full">
+      Trade unique digital collectibles
     </h1>
-    <h5 class="md:max-w-lg mx-auto text-left md:text-center">
-      Upload, collect, and transact rare digital art on the Liquid Network
-    </h5>
-    <a class="primary-btn" href={`/market`}>Start exploring</a>
+    <p class="text-white md:max-w-lg mx-auto text-left md:text-center my-6">
+      The preeminent marketplace for verified NFTs from creatives, artists,
+      innovators and brands building in the Bitcoin ecosystem.
+    </p>
+    <p>
+      <a class="primary-btn" href={`/market`}>Start exploring</a>
+    </p>
   </div>
 </div>
 
@@ -207,6 +209,9 @@
     margin-bottom: 128px !important;
   }
 
+  .header-container {
+    background: url("/header-bg.jpg");
+  }
   @media only screen and (max-width: 768px) {
     .header-container.marg-bottom {
       margin-bottom: 96px !important;
