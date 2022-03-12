@@ -19,7 +19,7 @@
 
 <div class="w-full px-5 md:px-0">
   <p class="text-xl mb-10">
-    You'll need to know your backup phrase. Some things to have in
+    It is important to know & proctect your backup phrase. Some things to have in
     mind:
   </p>
 
@@ -46,5 +46,5 @@
     </li>
   </ul>
 
-  <a href="/wallet/create/step2" class="primary-btn w-full">I'm ready to start</a>
+  <a href="/wallet/create/step2" class="primary-btn w-full">Create wallet</a>
 </div>
