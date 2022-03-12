@@ -46,8 +46,8 @@
 
 <div class="px-5 sm:px-0">
   {#if txns.length}
-    <div class="my-7 flex justify-center">
-      <div class="my-auto mr-2">Show all</div>
+    <div class="my-7 flex">
+      <div class="flex-1">Transaction history</div>
       <ToggleSwitch
         id="toggle"
         checked={show}
