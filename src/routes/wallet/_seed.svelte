@@ -28,7 +28,7 @@
         id: $session.user.id,
       });
 
-      info("Wallet is ready!");
+      info("Your wallet is ready!");
 
       $session.user.wallet_initialized = true;
 
@@ -199,3 +199,93 @@
     }
   }
 </style>
+
+<div class="p-5">
+  <div class="flex flex-col">
+    <p>Input your backup seed phrase in the correct order:</p>
+
+    {#if !bulk}
+      <div class="text-right mt-5">
+        <ToggleSwitch
+          id="list-price"
+          label="Show words"
+          on:change={(e) => (show = e.target.checked)}
+          checked={show} />
+      </div>
+    {/if}
+  </div>
+
+  {#if bulk}
+    <textarea
+      bind:value={typed}
+      placeholder="Type or paste your seed phrase here"
+      class="my-4 w-full"
+      on:blur={setMnemonic} />
+  {:else}
+    <div class="flex flex-wrap mb-2">
+      <div class="mr-2 sm:mr-0 flex-grow w-1/4 sm:w-1/2">
+        {#each words.slice(0, 6) as word, i (i)}
+          <div class="flex">
+            <div class="my-auto w-1/12">{i + 1}.</div>
+            {#if show}
+              <input
+                bind:value={words[i]}
+                on:keydown={(e) => keyup(i, e)}
+                key={i}
+                bind:this={inputs[i]} />
+            {:else}
+              <input
+                bind:value={words[i]}
+                on:keydown={(e) => keyup(i, e)}
+                key={i}
+                bind:this={inputs[i]}
+                type="password" />
+            {/if}
+          </div>
+        {/each}
+      </div>
+      <div class="flex-grow w-1/4 sm:w-1/2">
+        {#each words.slice(6, 12) as word, i (i)}
+          <div class="flex">
+            <div class="my-auto w-1/12">{i + 6 + 1}.</div>
+            {#if show}
+              <input
+                bind:value={words[i + 6]}
+                on:keydown={(e) => keyup(i + 6, e)}
+                bind:this={inputs[i + 6]}
+                key={i + 6} />
+            {:else}
+              <input
+                bind:value={words[i + 6]}
+                on:keydown={(e) => keyup(i + 6, e)}
+                bind:this={inputs[i + 6]}
+                key={i + 6}
+                type="password" />
+            {/if}
+          </div>
+        {/each}
+      </div>
+    </div>
+    <div class="suggestions mt-8 flex flex-wrap justify-center">
+      {#each suggestions as suggestion}
+        <button
+          class="primary-btn w-auto border m-1"
+          on:click={() => take(suggestion)}>{suggestion}</button>
+      {/each}
+    </div>
+  {/if}
+
+  <p class="my-4">
+    {#if bulk}
+      <a
+        class="secondary-color my-2"
+        href="/"
+        on:click|preventDefault={toggle}>Enter seed one word at a time</a>
+    {:else}
+      <a
+        class="secondary-color my-2"
+        href="/"
+        on:click|preventDefault={toggle}>Type seed in a text box</a>
+    {/if}
+  </p>
+</div>
