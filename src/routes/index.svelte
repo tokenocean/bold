@@ -40,14 +40,11 @@
 <div class="flex header-container mx-auto justify-center marg-bottom p-12">
   <div class="header text-center">
     <h1 class="text-white text-left md:text-center md:w-full">
-      Trade unique digital collectibles
+      Collect From The Boldest Creators
     </h1>
-    <p class="text-white md:max-w-lg mx-auto text-left md:text-center my-6">
-      The preeminent marketplace for verified NFTs from creatives, artists,
-      innovators and brands building in the Bitcoin ecosystem.
-    </p>
+    
     <p>
-      <a class="primary-btn" href={`/market`}>Start exploring</a>
+      <a class="primary-btn" href={`/market`}>Explore Collections</a>
     </p>
   </div>
 </div>
@@ -114,7 +111,7 @@
 {/if}
 
 <div class="container mx-auto px-10">
-  <h3>Recent Activity</h3>
+  <h3>Latest Activity</h3>
 </div>
 <div class="container mx-auto flex overflow-x-auto">
   {#each recent as transaction}
@@ -122,11 +119,11 @@
   {/each}
 </div>
 <div class="container more marg-bottom">
-  <a class="secondary-btn" href={"/activity"}>View more</a>
+  <a class="secondary-btn" href={"/activity"}>View Collections</a>
 </div>
 
 <div class="container mx-auto px-10">
-  <h3>Latest Pieces</h3>
+  <h3>Recent Artwork</h3>
 </div>
 <div class="container mx-auto flex pb-1 overflow-x-auto">
   {#each latest as transaction}
@@ -134,7 +131,7 @@
   {/each}
 </div>
 <div class="container more marg-bottom">
-  <a class="secondary-btn" href={"/market"}>View gallery</a>
+  <a class="secondary-btn" href={"/market"}>Explore Gallery</a>
 </div>
 
 <style>
