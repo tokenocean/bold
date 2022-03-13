@@ -285,7 +285,7 @@
       {#if submitted}
         <div>
           Thank you! Your creator application has been submitted. After we've have had a 
-          chance to review it, if you've been approved, we'll follow up by email.
+          chance to review it, if you've been approved, we'll follow up by email!
         </div>
       {:else}
         <p>
