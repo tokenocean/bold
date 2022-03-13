@@ -8,11 +8,11 @@
 
 <div class="container mx-auto sm:justify-between mt-10 md:mt-20">
   <div class="mx-auto">
-    <h2 class="mb-10">The Bold User Guide</h2>
+    <h2 class="mb-10">Bold Gallery User Guide</h2>
     <div class="flex layout-container">
       <div class="guide-content">
         <div class="toc boxShadow">
-          <h3>Table of contents</h3>
+          <h3>Table of Contents</h3>
           <ol style="list-style: decimal; padding-left: 30px">
             <li>
               <p><a href="#create-new-account">CREATE A NEW ACCOUNT</a></p>
@@ -21,7 +21,7 @@
             <li>
               <p><a href="#fund-your-wallet">FUND YOUR WALLET</a></p>
               <ol style="list-style: decimal; padding-left: 30px">
-                <li><a href="#liquid">Liquid</a></li>
+                <li><a href="#liquid">Liquid Bitcoin</a></li>
                 <li><a href="#btc-on-chain">BTC (on-chain)</a></li>
                 <li><a href="#btc-lightning">BTC (Lightning)</a></li>
               </ol>
@@ -29,28 +29,28 @@
             <li>
               <p>
                 <a href="#upload-artwork-and-mint-nft"
-                  >UPLOAD ARTWORK & MINT NFT</a
+                  >MINTING NFTs</a
                 >
               </p>
             </li>
             <li>
-              <p><a href="#list-artwork">LIST ARTWORK</a></p>
+              <p><a href="#list-artwork">LIST & SELL</a></p>
               <ol style="list-style: decimal; padding-left: 30px">
-                <li><a href="#simple-listing">Simple listing</a></li>
-                <li><a href="#auctions">Auctions</a></li>
+                <li><a href="#simple-listing">Basic Listing</a></li>
+                <li><a href="#auctions">Auction Listing</a></li>
               </ol>
             </li>
             <li>
               <p>
                 <a href="#what-to-expect-after-listing"
-                  >WHAT TO EXPECT AFTER LISTING ARTWORK</a
+                  >AFTER LISTING YOUR ARTWORK</a
                 >
               </p>
             </li>
             <li>
               <p><a href="#other">OTHER</a></p>
               <ol style="list-style: decimal; padding-left: 30px">
-                <li><a href="#edit-profile">Edit your The Bold profile</a></li>
+                <li><a href="#edit-profile">Editing Your Bold Gallery Profile</a></li>
               </ol>
             </li>
           </ol>
@@ -108,11 +108,11 @@
               </li>
               <li>
                 <p>
-                  Select “Continue to The Bold” or go back to
+                  Select “Continue to Bold Gallery” or go back to
                   <a href="https://bold.gallery/login" target="_blank"
                     >https://bold.gallery/login</a
                   > and log in with your username and password. The first time you
-                  log into your The Bold account you will be prompted to create a
+                  log into your Bold Gallery account you will be prompted to create a
                   new wallet.
                 </p>
               </li>
@@ -123,8 +123,7 @@
             <ol style="list-style: decimal; padding-left: 30px">
               <li>
                 <p>
-                  Select “Create new wallet”. Read the instructions and click "I
-                  am ready to start" to see your 12-words mnemonic seed.
+                  Select “Create new wallet”. Read the instructions and click "Create Wallet" to see your 12-words mnemonic seed.
                 </p>
               </li>
               <li>
@@ -177,7 +176,7 @@
             <p>
               Artists will need a bit of Liquid Bitcoin (L-BTC) in their wallet
               to mint an NFT (~0.000013 L-BTC or ~0.5 USD at the time of
-              writing). The Bold users will also need L-BTC or other Liquid
+              writing). Bold Gallery users will also need L-BTC or other Liquid
               assets (e.g. USDt Liquid) in their wallets to bid on artwork. Your
               wallet can be funded through a Liquid, Bitcoin on-chain or
               Lightning transaction.
@@ -185,8 +184,8 @@
             <p class="font-bold">
               If you choose to fund your account through a Bitcoin on-chain
               address or Lightning invoice, your BTC will automatically convert
-              to L-BTC within The Bold. This is probably the most
-              straightforward and easiest way to get L-BTC in your The Bold
+              to L-BTC within the Bold Gallery. This is probably the most
+              straightforward and easiest way to get L-BTC in your Bold Gallery
               wallet.
             </p>
             <p>
@@ -214,10 +213,10 @@
               >.
             </p>
             <p>
-              When selecting “Fund” in your The Bold wallet, you will be shown a
+              When selecting “Fund” in your Bold Gallery wallet, you will be shown a
               Liquid non-confidential address in text format and in QR code. You
               can use this non-confidential address to send any Liquid asset
-              including L-BTC, USDt (Liquid), or L-CAD directly to your The Bold
+              including L-BTC, USDt (Liquid), or L-CAD directly to your Bold Gallery
               wallet without limit in amount.
             </p>
             <p>
@@ -230,7 +229,7 @@
                 target="_blank">Blockstream AQUA</a
               >
               or <a href="https://coinos.io/" target="_blank">Coinos</a> to send
-              Liquid assets to your The Bold wallet. If you get an error in your
+              Liquid assets to your Bold Gallery wallet. If you get an error in your
               Green or AQUA wallet saying “Non-Confidential addresses not supported”
               simply click on “Confidential” under the Liquid address and you will
               be shown a confidential address and corresponding QR code.
@@ -246,7 +245,7 @@
               page.
             </p>
             <p>
-              To speed up your The Bold wallet funding process, avoid funding
+              To speed up your Bold Gallery wallet funding process, avoid funding
               delays and be able to bid on artwork with agility, we recommend
               obtaining L-BTC ahead of time. If you want to learn about
               different ways to get L-BTC please take a look at <a
@@ -277,12 +276,12 @@
           <div class="item" id="btc-lightning">
             <h4>3.3 BTC (Lightning)</h4>
             <p>
-              You can also fund your The Bold Liquid wallet using Lightning. By
+              You can also fund your Bold Gallery Liquid wallet using Lightning. By
               selecting “Lightning” you will be presented with a Lightning
               invoice with no predefined amount. You can scan this QR code and
               input the amount you want to send. Similar to on-chain funding,
               your BTC will be sent to Coinos and automatically exchanged to
-              L-BTC that will then be deposited in your The Bold Liquid wallet.
+              L-BTC that will then be deposited in your Bold Gallery Liquid wallet.
               Keep in mind that there is currently a minimum of 0.00001 btc
               (~1,000 sats) and a maximum of 0.01 BTC with this funding option.
             </p>
@@ -293,18 +292,18 @@
             />
           </div>
           <div class="item" id="upload-artwork-and-mint-nft">
-            <h3>4. UPLOAD ARTWORK & MINT NFT</h3>
+            <h3>4. MINTING NFTs</h3>
             <p>
-              All new accounts in The Bold are “Fan” accounts. With this type of
-              account you can bid on artwork and trade NTFs in the secondary
-              market, but you can’t upload or mint NFTs. These options are
-              reserved for users with an artist account. Artists will get their
-              accounts tagged as “Artists” during the onboarding process.
+              All new accounts in the Bold Gallery are “Viewer” accounts. With this type of
+              account you can view artworks and NTFs in the secondary
+              market, but you can’t trade, upload or mint NFTs. These options are
+              reserved for users with an verified or creator account. Creators will get their
+              accounts tagged as “Artist” during the onboarding process.
             </p>
             <p>
-              To upload their artwork, artists can go to their profile page and
+              To upload their artwork, creators can go to their profile page and
               select “Submit a new artwork.” This option is also available in
-              the “Market” page (https://bold.gallery/market). Current supported
+              the “Market” page (https://collect.bold.gallery/market). Current supported
               file formats are jpg, png, gif and mp4 up to a size limit of
               400MB.
             </p>
@@ -315,10 +314,10 @@
             />
             <img class="guide-image" src="/guide/image4.png" alt="Screenshot" />
             <p>
-              You will be presented with a “Submit artwork” form. You can either
+              You will be presented with a “Submit Artwork” form. You can either
               drag and drop your file or click on “Upload your artwork” to
               select a file from your device. You will see a “Upload complete!”
-              message once your artwork is ready
+              message once your artwork is ready.
             </p>
             <img class="guide-image" src="/guide/image3.png" alt="Screenshot" />
             <img class="guide-image" src="/guide/image1.png" alt="Screenshot" />
@@ -326,19 +325,19 @@
             <ul style="list-style: disc; padding-left: 30px">
               <li>Title</li>
               <li>
-                This is a physical artwork (this just adds an icon to indicate
+                "Physical Artwork" (this just adds an icon to indicate
                 that the NFT is associated with a physical item like a physical
                 copy of the artwork)
               </li>
-              <li>Number of editions (1:1, multiple editions)</li>
+              <li>Number of editions (1/1, multiple editions)</li>
               <li>
-                Description (here you can add a description of your artwork,
-                about yourself, or indicate that there is additional content
+                Description (here you can add a description of your artwork, 
+                yourself, or indicate that there is additional content
                 associated with the NFT such as a physical copy of the
                 underlying artwork, access to an event, etc.)
               </li>
               <li>
-                Ticker (this is a short 3-5 character identifier for your asset
+                Ticker (A 3-5 character identifier for your asset
                 that you will see in other Liquid wallets and explorers. The
                 ticker will be automatically selected based on the title of your
                 artwork, but it can also be customized)
@@ -346,12 +345,12 @@
               <li>
                 Tags (you can use this field to add search words for your
                 artwork so other users can find it easily. This section will
-                also be used to include your artwork in a specific gallery
-                (e.g., #Bitcoin2021; #Cypherpunks, etc.) Please only add the tag
+                also be used to include your artwork in a specific gallery/collection
+                (e.g., #NFTNYC, #GreyMatter, etc.) Please only add the tag
                 to a specific gallery if you are authorized to do so. We will
                 remove any artwork that is not supposed to be displayed in the
-                gallery. Consult with your gallery organizer to make sure you
-                include the appropriate tag
+                gallery. Consult with your gallery curator/organizer to make sure you
+                include the appropriate tag.
               </li>
             </ul>
             <img
@@ -370,7 +369,7 @@
             </p>
             <p>
               You will have to wait 1-2 min for the NFT minting transaction to
-              be confirmed in the Liquid blockchain (indicated as “pending'' by
+              be confirmed in the Liquid blockchain (indicated as "pending" by
               the history of the artwork on the bottom left corner).
             </p>
             <img
@@ -380,8 +379,8 @@
             />
             <p>
               Once the minting transaction is confirmed, your artwork/NFT will
-              be ready to be listed. At this point your artwork is labelled as
-              “Unlisted” so no other The Bold user can see it in the platform.
+              be ready to be listed for sale. At this point your artwork is labelled as
+              “Unlisted” so no other Bold gallery user can see it in the platform.
               You can see it in your profile page but it won’t be publicly
               visible until listed.
             </p>
@@ -389,7 +388,7 @@
             <p>
               The NFT will also be in your wallet now. You can confirm this by
               going to your profile page and then to your wallet. If you go to
-              “X assets available in this wallet>” you will see all Liquid
+              “X assets available in this wallet >” you will see all Liquid
               assets in your wallet including L-BTC and NFTs.
             </p>
             <img
@@ -404,13 +403,13 @@
             />
           </div>
           <div class="item" id="list-artwork">
-            <h3>5. LIST ARTWORK</h3>
+            <h3>5. LIST & SELL</h3>
             <p>
               After uploading your artwork and minting NFT you can then proceed
               to list your piece for sale.
             </p>
             <p>
-              1. Go to your The Bold profile page. There, you will find all your
+              1. Go to your Bold Gallery profile page. There, you will find all your
               uploaded artwork under the “Creations” tab.
             </p>
             <img class="guide-image" src="/guide/image8.png" alt="Screenshot" />
@@ -420,8 +419,8 @@
               alt="Screenshot"
             />
             <p>
-              2. Select the unlisted piece that you want to publicly list by
-              clicking on it. You will be taken to the artwork page where you
+              2. Select the unlisted piece that you want to publicly list to the main 
+              gallery by clicking on it. You will be taken to the artwork page where you
               will be able to list it by clicking on “List.”
             </p>
             <img
@@ -436,38 +435,38 @@
             />
             <p>
               3. You will now be presented with several options for your listing
-              and you’ll be able to select between simple listing and auction.
+              and you’ll be able to select between basic listing and auction.
             </p>
           </div>
           <div class="item" id="simple-listing">
-            <h4>5.1 Simple listing</h4>
+            <h4>5.1 Basic Listing</h4>
             <p>You have different options that include:</p>
             <p>
-              1. Listing currency: you can define if you want to receive L-BTC,
-              L-CAD or USDt (Liquid). Users bidding for your artwork will have
-              to do it in this listing currency
+              1. Listing currency: Decide if you want to receive L-BTC,
+              L-CAD or USDt (Liquid). Collectors bidding for your artwork will have
+              to do it in this listing currency.
             </p>
             <p>
-              2. Price: setting a price is optional. This would be the “buy it
-              now” or buyout price. If you don’t set a price, users will post
-              offers for your piece.
+              2. Price: This would be the “buy it now” or buyout price.
+              Setting a price is optional. If you choose not to set a price,
+              users will post custom offers for your artwork.
             </p>
             <p>
-              3. Royalty Rate: setting a royalty rate (in percentage) is
+              3. Royalty Rate: Setting a royalty rate (in percentage) is
               optional. This is the percentage that will be paid to the original
-              artist in subsequent sales of the NFT. Setting a royalty involves
-              transferring the artwork to a 2-of-2 multisig address with The
-              Bold. Our servers will only co-sign a transfer if they pay the
+              artist in secondary sales of the NFT. Setting a royalty involves
+              transferring the artwork to a 2-of-2 multisig address with the
+              Bold Gallery. Our servers will only co-sign a transfer if they pay the
               specified royalty to the original artist. This percentage can not
               be modified afterwards by any NFT owner. Once an NFT has a royalty
-              associated it gets locked in The Bold to ensure that the original
+              associated it gets locked in the Bold Gallery to ensure that the original
               artists receive their royalties, which means the NFT cannot be
               transferred outside of the platform. If you want your NFT to be
-              transferable outside of The Bold wallets, do not add a royalty.
+              transferable outside of the Bold Gallery wallets, do not add a royalty.
             </p>
             <p>
               Once you are happy with your listing conditions you can hit
-              “Submit” and your piece will be published for sale. You will be
+              “Submit” and your artwork will be published for sale. You will be
               redirected to the artwork page and will be able to see the listing
               details and the history of the artwork if you scroll down.
             </p>
@@ -493,10 +492,10 @@
             />
           </div>
           <div class="item" id="auction">
-            <h4>5.2 Auction</h4>
+            <h4>5.2 Auction Listing</h4>
             <p>
               You must enable “Create an auction” on the listing page to
-              activate this option. You have the same options as in simple
+              activate this option. You have the same options as in basic
               listing, but in this case, you can also add a start and end date
               and time for your auction and a reserve price. The reserve price
               is the minimum price you’ll accept for the artwork. Setting one is
@@ -511,7 +510,7 @@
             <p>
               To ensure auction start and end dates and time, once an artwork is
               listed using this option it is transferred to a 2-of-2 multisig
-              address. The The Bold server will co-sign this transaction once
+              address. The Bold Gallery server will co-sign this transaction once
               the auction is finished and the NFT will be sent to the highest
               bidder and the money to the artist.
             </p>
@@ -527,14 +526,14 @@
             />
           </div>
           <div class="item" id="what-to-expect-after-listing">
-            <h3>6. WHAT TO EXPECT AFTER LISTING</h3>
+            <h3>6. AFTER LISTING YOUR ARTWORK</h3>
             <p>
-              After listing your artwork, The Bold users will be able to bid in
+              After listing your artwork, Bold Gallery users will be able to bid in
               different ways depending on your listing conditions. If you set a
               price, users will be able to buy out your artwork immediately for
               that price. Users can also make an offer and you’ll see these
               offers in the artwork page and in your profile page under
-              “Offers.” If you did a simple listing (i.e., not auction) after
+              “Offers.” If you did a basic listing (i.e., not auction) after
               someone places a bid on your artwork, you can accept that offer,
               wait for further offers or wait until someone pays the buyout
               price for your piece.
@@ -542,7 +541,7 @@
             <p>
               If you decide to accept an offer, your wallet will sign the atomic
               swap transaction that will transfer the NFT to the bidder and will
-              deposit the bid money into your The Bold wallet. Your artwork will
+              deposit the bid money into your Bold Gallery wallet. Your artwork will
               still be visible to you in your profile page under “Creations” but
               since you no longer are the owner, it won’t show up under the
               “Collection” tab. The artwork page will also show the history of
@@ -564,7 +563,7 @@
               alt="Screenshot"
             />
             <p>
-              If you decide to list your artwork as an auction, The Bold users
+              If you decide to list your artwork as an auction, Bold Gallery users
               will see the time left until the auction goes live, and they will
               be able to bid for your piece until the end of the auction. If you
               set a reserve price (i.e., minimum amount that you will accept for
@@ -577,11 +576,11 @@
             </p>
           </div>
           <div class="item" id="other">
-            <h3>7. OTHER</h3>
+            <h3>7. ACCOUNT MANAGEMENT</h3>
           </div>
           <div class="item" id="edit-profile">
-            <h4>7.1 Edit your The Bold profile</h4>
-            <p>1. Go to your profile page</p>
+            <h4>7.1 Editing Your Bold Gallery Profile</h4>
+            <p>1. Go to your profile page.</p>
             <img
               class="guide-image"
               src="/guide/image11.png"
@@ -597,7 +596,7 @@
 
             <p>
               3. Fill out the fields and change your profile picture if you want
-              and save the changes. Done.
+              and save the changes. Your profile will be automatically updated!
             </p>
             <img
               class="guide-image"
