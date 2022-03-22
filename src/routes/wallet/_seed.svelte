@@ -280,12 +280,12 @@
       <a
         class="secondary-color my-2"
         href="/"
-        on:click|preventDefault={toggle}>Enter seed one word at a time</a>
+        on:click|preventDefault={toggle}>Enter seed phrase one word at a time</a>
     {:else}
       <a
         class="secondary-color my-2"
         href="/"
-        on:click|preventDefault={toggle}>Type seed in a text box</a>
+        on:click|preventDefault={toggle}>Type seed phrase in a text box</a>
     {/if}
   </p>
 </div>
