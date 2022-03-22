@@ -58,18 +58,18 @@
       <ProgressLinear />
     {:else if success}
       <h2 class="mb-8">Email confirmed!</h2>
-      <p>Thank you! Your email is verified.</p>
+      <p>Thank you for registering! Your email has now been verified.</p>
 
       <div class="flex">
         <div class="ml-auto mt-8">
-          <a href="/login" class="primary-btn">Continue to {branding.projectName}</a>
+          <a href="/login" class="primary-btn">Proceed to {branding.projectName}</a>
         </div>
       </div>
     {:else}
-      <h2 class="mb-8">Something went wrong</h2>
+      <h2 class="mb-8">Something went wrong!</h2>
       <div class="flex">
         <div class="ml-auto mt-8">
-          <a href="/login" class="primary-btn">Continue to {branding.projectName}</a>
+          <a href="/login" class="primary-btn">Proceed to {branding.projectName}</a>
         </div>
       </div>
     {/if}
