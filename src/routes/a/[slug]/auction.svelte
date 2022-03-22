@@ -415,14 +415,14 @@
       </div>
     </a>
 
-    <h2>List artwork</h2>
+    <h2>List Artwork</h2>
 
     {#if loading}
       <ProgressLinear />
     {:else}
       {#if auction_underway}
         <h4 class="mt-12">
-          Listing cannot be updated while auction is underway
+          Your artwork cannot be edited after the auction has begun.
         </h4>
       {/if}
 
@@ -537,7 +537,7 @@
                 bind:checked={auction_enabled}
                 disabled={auction_underway}
               />
-              <span class="ml-3 text-xl">Create an Auction</span>
+              <span class="ml-3 text-xl">Create An Auction</span>
             </label>
           </div>
           {#if auction_enabled}
