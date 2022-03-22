@@ -52,11 +52,11 @@
       <div class="faq">
         <p>
           { branding.projectName } is a bitcoin-focused digital art website based on the LNFT
-          platform which provides a new way for artists and their fans to
-          interact in a more direct way. { branding.projectName } provides artists with an easy
+          platform which provides a new way for creators and their collectors to
+          interact in a more direct way. { branding.projectName } provides creators with an easy
           and intuitive way to mint and trade non-fungible tokens (NFTs) on the
-          Liquid Network (a Bitcoin sidechain). { branding.projectName } allows fans to support
-          their favourite artist through digital patronage. As an artist or fan
+          Liquid Network (a Bitcoin sidechain). { branding.projectName } allows collectors to support
+          their favorite artist through digital patronage. As an creator or collector
           you should understand exactly how { branding.projectName } works before you decide to
           participate. These Terms &amp; Conditions give a quick summary, but
           you should review the { branding.projectName } FAQs and ask questions on the
@@ -67,14 +67,10 @@
 
         <p>
           Please read these Terms &amp; Conditions (“Terms'', “Agreement”) very
-          carefully. This Agreement is between you (the “User(s),” “Artist(s),”
-          “Fan(s)”, and collectively any entity using the Site - “Users”) and
-          GreenAddressIT Limited (“Operator”, “we”or “us”), a company registered
-          and incorporated under the laws of Malta with company number C62738
-          and whose registered office is Vincenti Buildings 28/19 (Suite 1405),
-          Strait Street, VLT1432 Valletta, Malta and a wholly-owned, indirect
-          subsidiary of Blockstream Corporation Inc, and operating the { branding.projectName }
-          website (“Website”) located at { branding.projectName }.com (“Site”).
+          carefully. This Agreement is between you (the “User(s),” “Creator(s),”
+          “Collector(s)”, and collectively any entity using the Site - “Users”) and
+          Bold Gallery (“Operator”, “we”or “us”), operating the { branding.projectName }
+          website (“Website”) located at https://bold.gallery (“Site”).
         </p>
 
         <p>
@@ -101,28 +97,28 @@
         <h3>The Website</h3>
 
         <p>
-          { branding.projectName } is an open source curated instance of the LNFT platform for
-          Bitcoin artists and fans. LNFT is a web-based platform for issuing and
-          transacting with non-fungible tokens on the Bitcoin Liquid Network.
+          { branding.projectName } is curated instance of the LNFT platform for
+          creators and collectors from a variety of different mediums. LNFT is a web-based 
+          platform for issuing and transacting with non-fungible tokens on the Bitcoin Liquid Network.
         </p>
 
         <h3>Accessing and Interacting with the Website</h3>
         <h4>User account registration and types of accounts</h4>
         <p>
           All new users will need a valid email address to register in the
-          Website. The Website has two types of user accounts: Artist and Fan
-          account. All new users will automatically receive a Fan account when
-          registering in the Website. This account will allow the User to trade
+          Website. The Website has two types of user accounts: Creator and Collector
+          accounts. All new users will automatically receive a Collecter account when
+          registering in the Website. This account will allow the User to view and trade
           NFTs in the Website but it will not provide permission to upload
-          Artwork to the Website or mint NFTs. On the other hand, the Artist
-          account will have the same functionality as the Fan account with the
+          Artwork to the Website or mint NFTs. On the other hand, the Creator
+          account will have the same functionality as the Collector account with the
           added permissions of uploading Artwork and minting NFTs in the
-          Website. Initially, only a limited number of Artist accounts will be
+          Website. Initially, only a limited number of Creator accounts will be
           granted to selected artists. Users must ensure that Account(s)
           registered are personal and will not be used by any other person. You
           must inform us immediately of any breach of security, loss, theft or
           unauthorized use of your username, password or security information at
-          <a href="mailto:support@{ branding.projectName }.com">support@{ branding.projectName }.com</a>
+          <a href="mailto:support@bold.gallery">support@bold.gallery</a>
         </p>
 
         <p>
@@ -167,7 +163,7 @@
           </li>
           <li>
             Create user accounts by automated means or under false or fraudulent
-            pretenses.
+            pretenses
           </li>
         </ul>
 
@@ -237,8 +233,7 @@
           lightning network invoice. While L-BTC is necessary to pay for
           transaction fees in the Website (including NFT minting), it is
           possible to fund your wallet with other supported Liquid assets such
-          as L-USDt or Liquid CAD (L-CAD) to bid for NFTs denominated in that
-          asset type.
+          as L-USDt to bid for NFTs denominated in that asset type.
         </p>
 
         <p>
@@ -249,71 +244,71 @@
           transaction follow the Sale terms. In addition, royalties and auction
           holding periods are enforced through a 2-of-2 signing server provided
           by the Website that only signs off on transactions that meet certain
-          conditions including making sure that Artists receive their
+          conditions including making sure that Creators receive their
           corresponding royalties. Initially { branding.projectName } will not charge any fee
           for any transaction performed in the Website (other than Liquid
           transaction fees), but this may change in the future.
         </p>
 
-        <h3>Creation of { branding.projectName } Items</h3>
+        <h3>Creation of { branding.projectName } Artwork/NFTs</h3>
 
         <p>
-          All Artwork (“Artwork(s)”, “Creation(s)”, “Work”) posted on the
+          All Artwork (“Artwork(s)”, “Creation(s)”, “Work”, "NFT(s)") posted on the
           { branding.projectName } website is associated with a unique Liquid asset exclusively
-          issued by an approved { branding.projectName } Artist. Each { branding.projectName } Item
+          issued by an approved { branding.projectName } Creator. Each { branding.projectName } artwork
           (“Item(s)”, “Non-fungible token(s)”, “NFT(s)” or “Token”) is minted by
-          an Artist using the asset issuance functionality of the Liquid
+          an Creator using the asset issuance functionality of the Liquid
           Network. The type of media files that are currently supported and can
-          be used by Artists in { branding.projectName } to post their Work are jpg, png, gif
-          and mp4. When an Artist first uploads his or her Work to { branding.projectName },
+          be used by Creators in { branding.projectName } to post their Work are jpg, png, gif
+          and mp4. When an Creator first uploads their Work to { branding.projectName },
           the media file is added to the IPFS network and assigned a unique
           content identifier (CID) derived from the SHA256 hash of the file. The
           Website hosts an IPFS node that is capable of maintaining a copy and
-          serving the media files to other nodes. Artists or anyone interested
+          serving the media files to other nodes. Creators or anyone interested
           could run their own IPFS node to provide this service and add
           redundancy to the system. After adding the Artwork to the IPFS
-          network, the Artist's wallet generates a Liquid asset issuance
+          network, the Creator's wallet generates a Liquid asset issuance
           transaction containing some metadata including the title of the
           Artwork and the CID. This issuance transaction (“Mint”) is then
           broadcasted to be permanently recorded in the Liquid blockchain, added
           to the Blockstream Asset Registry and the minted Token is sent to the
-          Artist’s wallet that can then be traded in the Website. This action
-          provides { branding.projectName } Artists and Fans with a permanent record of
+          Creator’s wallet that can then be traded in the Website. This action
+          provides { branding.projectName } Creators and Collectors with a permanent record of
           authenticity and ownership of the Token. Since the asset registry is
           an open source project publicly available on GitHub anyone interested
           could clone this project and provide redundancy to the system. After a
-          Token is minted by an Artist, he or she can then propose the terms
-          (“Sale”) under which the Token will be sold to Fans (including the
-          option to add royalties to be assigned to the original Artist) in a
-          primary sale. After a { branding.projectName } Item is sold by the original Artist,
+          Token is minted by an Creator, they can then propose the terms
+          (“Sale”) under which the Token will be sold to Collectors (including the
+          option to add royalties to be assigned to the original Creator) in a
+          primary sale. After a { branding.projectName } Item is sold by the original Creator,
           it can then be traded in a secondary market provided by the Website to
           any { branding.projectName } User.
         </p>
 
-        <h3>{ branding.projectName } Artists</h3>
+        <h3>{ branding.projectName } Creators</h3>
 
         <p>
-          Initially, only invited Artists will be able to post Artwork in the
+          Initially, only invited Creators will be able to post Artwork in the
           Website, mint Tokens and make a primary Sale of { branding.projectName } Items. This
-          responsibility will then be passed on to the active { branding.projectName } Artists.
-          Artists seeking an invitation to create and list works for sale on
+          responsibility will then be passed on to the active { branding.projectName } Creators.
+          Potential creators seeking an invitation to create and list works for sale on
           { branding.projectName } must submit a request that can be found here. Please keep in
           mind that due to current limited resources this process could
           initially extend for months. { branding.projectName } has unilateral discretion in
           curating in the Website and makes no guarantees or promises that any
-          Artists will be approved, even if the Artist was invited by a member
-          of { branding.projectName } to submit a request
+          Creator will be approved, even if the Creator was invited by a member
+          of { branding.projectName } to submit a request.
         </p>
 
         <p>
-          By posting their Work and offering a Token on a Sale, an Artist agrees
-          with Operator, and represents and warranties to Operator and any Fan
+          By posting their Work and offering a Token on a Sale, an Creator agrees
+          with Operator, and represents and warranties to Operator and any Collector
           bidding on the Work that:
         </p>
 
         <ul>
           <li>
-            The Artist has the legal right to post the Work and to offer the
+            The Creator has the legal right to post the Work and to offer the
             Token and grant the rights in the Work described in the Sale terms
           </li>
           <li>
@@ -323,23 +318,23 @@
           <li>
             that the Work doesn’t violate any law, including blasphemy or
             decency laws, and can legally be displayed to anyone regardless of
-            his or her age
+            their age
           </li>
           <li>
-            Any information provided by the Artist, whether about themselves or
+            Any information provided by the Creator, whether about themselves or
             any Work, is true, correct and complete and they will update as
             needed
           </li>
           <li>
             They are not acting individually or in collusion with anyone,
-            including any Fan or User, to manipulate the Sale
+            including any Collector or User, to manipulate the Sale
           </li>
           <li>
-            The Artist assumes all risks of using the Website, issuing Tokens,
+            The Creator assumes all risks of using the Website, issuing Tokens,
             conducting Sales and settling Sales
           </li>
           <li>
-            The Artist grants to the Operator a perpetual, world-wide,
+            The Creator grants to the Operator a perpetual, world-wide,
             royalty-free license to use the Work and any information provided
             about the Work in operating the Website or in promoting the Website
             or Operator’s business generally. The fact that Operator may inspect
@@ -347,46 +342,46 @@
             affect these agreements, representations and warranties
           </li>
           <li>
-            Artist agrees to indemnify { branding.projectName } and Operator and be held liable
+            Creator agrees to indemnify { branding.projectName } and Operator and be held liable
             for any claim against { branding.projectName } or Operator arising out of the
-            Artist’s breach of these Terms. Artist releases and forever
+            Creator’s breach of these Terms. Creator releases and forever
             discharges { branding.projectName } and Operator from any damages or causes of
-            action resulting from a sale of any of the Artist’s listed { branding.projectName }
-            Items occurring after the Artist’s breach of these Terms.
+            action resulting from a sale of any of the Creator’s listed { branding.projectName }
+            Items occurring after the Creator’s breach of these Terms.
           </li>
         </ul>
 
         <p>
-          By posting their Work and offering a Token, an Artist acknowledges to
+          By posting their Work and offering a Token, a Creator acknowledges to
           Operator that:
         </p>
 
         <ul>
           <li>
-            the Artist understands that technical errors, whether on the
-            Artist’s part or in the Website software, the Liquid Network or any
-            underlying cryptocurrency network are solely the risk of the Artist
+            the Creator understands that technical errors, whether on the
+            Creator’s part or in the Website software, the Liquid Network or any
+            underlying cryptocurrency network are solely the risk of the Creator
           </li>
           <li>
-            The Artist understands that Operator can refuse any Work or
+            The Creator understands that Operator can refuse any Work or
             terminate any Sale at any time in its sole discretion for any reason
-            or no reason at all without any liability to the Artist
+            or no reason at all without any liability to the Creator
           </li>
           <li>
             If Operator receives any DMCA notice or other claim of infringement
             of rights or of law, Operator may act as it sees fit in order to
             protect its interests, including removing the purportedly offending
-            work from the Website, suspending or removing the Artist account and
+            work from the Website, suspending or removing the Creator account and
             providing the claimant or law enforcement agency with any and all
-            information about the Artist and the Work
+            information about the Creator and the Work
           </li>
         </ul>
 
-        <h3>{ branding.projectName } Fans</h3>
+        <h3>{ branding.projectName } Collectors</h3>
 
         <p>
-          By bidding on an Token, a Fan agrees with Operator, and represents and
-          warranties to Operator and the Artist or any other { branding.projectName } User
+          By bidding on an NFT, a Collector agrees with Operator, and represents and
+          warranties to Operator and the Creator or any other { branding.projectName } User
           that:
         </p>
 
@@ -404,20 +399,20 @@
           </li>
           <li>
             They are not acting individually or in collusion with anyone,
-            including the Artist, to manipulate the Sale
+            including the Creator, to manipulate the Sale
           </li>
         </ul>
 
-        <p>By bidding on a Token, a Fan acknowledges to the Operator that:</p>
+        <p>By bidding on a Token, a Collector acknowledges to the Operator that:</p>
 
         <ul>
           <li>
-            The Fan understands that technical errors, whether on the Fan’s part
+            The Collector understands that technical errors, whether on the Collector’s part
             or in the Website software, the Liquid Network or any underlying
-            cryptocurrency network are solely the risk of the Fan
+            cryptocurrency network are solely the risk of the Collector
           </li>
           <li>
-            Winning a Sale creates an agreement between the Artist and the Fan
+            Winning a Sale creates an agreement between the Creator and the Collector
           </li>
           <li>
             Purchasing a Token is a form of digital patronage and conveys only
@@ -425,14 +420,14 @@
             belong to the artist regardless of Token ownership. A Token does not
             convey any right or ownership on the associated Work and the Artwork
             can not be reproduced or derivative work created unless explicit
-            permission is granted by the Artist or in the Sale terms. If any
+            permission is granted by the Creator or in the Sale terms. If any
             additional right is granted to the Token holder, this is
             automatically cancelled when the Token holder is no longer in
             possession of the associated Token for any reason including but not
             limited to selling of the Token.
           </li>
           <li>
-            The ownership of the Token provides the Fan with the ability to
+            The ownership of the Token provides the Collector with the ability to
             display or perform the Work privately or publicly in social media
             platforms, blogs, digital galleries or virtual environments such as
             virtual worlds or virtual galleries for promotional purposes with
@@ -440,7 +435,7 @@
             discuss the Artwork. Any other features associated with the Token
             including but not limited to a physical representation of the
             Artwork will be explicitly described in the { branding.projectName } Item Sale.
-            Unless authorized by the Artist or Sale terms, the owner of a Token
+            Unless authorized by the Creator or Sale terms, the owner of a Token
             can not use the associated Artwork for commercial purposes including
             but not limited to selling copies of the Work. If any additional
             permissions or rights are granted, these would be automatically
@@ -450,9 +445,9 @@
           </li>
           <li>
             The Operator may act as it sees fit in order to protect its
-            interests, including cancelling the Fan’s account and providing the
-            Artists or law enforcement agency with any and all information about
-            the Fan.
+            interests, including cancelling the Collector’s account and providing the
+            Creators or law enforcement agency with any and all information about
+            the Collector.
           </li>
           <li>
             No assurance is given as to the current or future economic value of
@@ -465,10 +460,10 @@
           </li>
         </ul>
 
-        <h3>Fans and Artists</h3>
+        <h3>Collectors and Creators</h3>
         <p>
-          By registering to use the Website, each Fan and Artist agrees with
-          Blockstream that:
+          By registering to use the Website, each Collector and Creator agrees with
+          the Bold Gallery that:
         </p>
         <ul>
           <li>
@@ -478,7 +473,7 @@
           </li>
           <li>
             By posting any information on any forums maintained on the Website,
-            the Fan or Artist grants to Operator a perpetual, world-wide,
+            the Collector or Creator grants to Operator a perpetual, world-wide,
             royalty-free license to use such information in operating the
             Website or in promoting the Website or Operator’s business generally
             and Operator may delete any such posting at any time for any reason
@@ -500,7 +495,7 @@
         <h3>{ branding.projectName } Marketplace</h3>
 
         <p>
-          { branding.projectName } provides an easy and intuitive way for Artists and Fans to
+          { branding.projectName } provides an easy and intuitive way for Creators and Collectors to
           buy and sell { branding.projectName } Items. Artworks are listed in a
           searchable/sortable/filterable marketplace gallery. Bids and sales are
           conducted peer-to-peer using atomic swaps so the Website or Operator
@@ -525,21 +520,21 @@
 
         <ul>
           <li>
-            Simple listing: Artists or Token owners can set a predefined price
+            Basic listing: Creators or Token owners can set a predefined price
             for the { branding.projectName } Item or not, and decide on the listing asset
             denomination (e.g. L-BTC, L-USDt, etc.). The option to define a
-            royalty rate (in percentage) is also available only for Artists when
+            royalty rate (in percentage) is also available only for Creators when
             originally listing a { branding.projectName } Item in a primary sale. This rate can
             not be modified afterwards by any Token owner. This listing option
             keeps the { branding.projectName } Item available for purchase/bid as long as the
-            Sale terms are not fulfilled, delisted or deleted by the Artist or
+            Sale terms are not fulfilled, delisted or deleted by the Creator or
             Token owner.
           </li>
           <li>
             Auctions: This type of listing provides the same options as simple
-            listing but adds the possibility to the Artists or Token owners to
+            listing but adds the possibility to the Creators or Token owners to
             set a start and end date where offers can be presented by other
-            Users. Once the auction is completed, the Artist or Token owner can
+            Users. Once the auction is completed, the Creator or Token owner can
             select an offer to complete the Sale.
           </li>
         </ul>
@@ -548,16 +543,16 @@
 
         <ul>
           <li>
-            Make an offer: In this case a listing price is not predefined for
-            the { branding.projectName } Item. This allows Users to make offers on a { branding.projectName }
-            Item that the Artist or current owner of the { branding.projectName } Item can then
+            Make an Offer: In this case a listing price is not predefined for
+            the { branding.projectName } Item. This allows Collectors to make offers on a { branding.projectName }
+            Item that the Creator or current owner of the { branding.projectName } Item can then
             accept, reject or wait until more offers are available.
           </li>
           <li>
-            Buy Now: Artist or Token owners can decide to list a { branding.projectName } Item
+            Buy Now: Creator or Token owners can decide to list a { branding.projectName } Item
             for a predefined price. This allows other Users to automatically buy
             the { branding.projectName } Item for the listed price. The completion of the trade
-            is enforced by an atomic swap transaction created by the Artist or
+            is enforced by an atomic swap transaction created by the Creator or
             Token owner wallet when listing a { branding.projectName } Item. In this scenario
             however, it is also possible for Users to make an offer instead of
             buying the { branding.projectName } Item.
@@ -566,9 +561,9 @@
 
         <h3>Miscellaneous</h3>
         <p>
-          Each Artist and Fan agrees to indemnify the Operator and be held
-          liable for any claim against the Operator arising out of the Artist’s
-          or Fan’s breach of these Terms and all associated costs and expenses
+          Each Creator and Collector agrees to indemnify the Operator and be held
+          liable for any claim against the Operator arising out of the Creator’s
+          or Collector’s breach of these Terms and all associated costs and expenses
           of investigation or defense, including costs of counsel. The Operator
           may modify these Terms at any time and by continuing to use this site,
           you are deemed to have agreed to the modified terms.
@@ -620,7 +615,7 @@
           securities, regulatory authorities, or other governmental agencies.
         </p>
         <p>
-          However any Fan, Artist or Operator may also bring qualifying claims
+          However any Collector, Creator or Operator may also bring qualifying claims
           in small claims court.
         </p>
 
@@ -632,7 +627,7 @@
         </p>
 
         <p class="w-full text-center">
-          These Terms were last updated on May 19th, 2021.
+          These Terms were last updated on March 22nd, 2022.
         </p>
       </div>
     </div>
