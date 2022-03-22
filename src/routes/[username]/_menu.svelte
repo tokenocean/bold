@@ -19,7 +19,7 @@
         <div class="my-auto">
           <Fa icon={faUserCircle} />
         </div>
-        <div><span>Apply To Be a Creator</span></div>
+        <div><span>Become a Creator</span></div>
       </div>
     </a>
   {/if}
