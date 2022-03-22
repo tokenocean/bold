@@ -42,7 +42,7 @@
         <Fa icon={faWallet} />
       </i>
       <span class="-mt-1">The backup phrase is essential to restore your wallet.
-        Make sure its accurate and kept safe.!</span>
+        Make sure its accurate and kept safe!</span>
     </li>
   </ul>
 
