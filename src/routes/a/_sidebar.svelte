@@ -42,7 +42,7 @@
       class="text-xs my-6 cursor-pointer"
       on:click={() => (showDetails = !showDetails)}>
       <div class="flex">
-        <div>Asset details</div>
+        <div>Asset Details</div>
         <div class="my-auto ml-1">
           <Fa icon={showDetails ? faChevronUp : faChevronDown} />
         </div>
