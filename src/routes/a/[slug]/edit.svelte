@@ -62,7 +62,7 @@
           <div>Back</div>
         </div>
       </a>
-    <h2>Edit artwork</h2>
+    <h2>Edit Artwork</h2>
       <Form bind:artwork title={artwork.title} on:submit={update} />
   </div>
 </div>
