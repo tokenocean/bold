@@ -36,9 +36,9 @@
             <Card artwork={tag.artwork} />
           </div>
         {/each}
-        <a class="mx-auto secondary-btn mb-20" href={`/galleries/${gallery}`}
-          >View gallery</a
-        >
+        <a
+          class="mx-auto secondary-btn mb-20"
+          href={`/galleries/${gallery}`}>View Gallery</a>
       </div>
     {/each}
   </div>
