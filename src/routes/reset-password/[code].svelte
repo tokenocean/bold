@@ -65,9 +65,9 @@
 
 <div class="form-container bg-lightblue">
   <form class="mb-6" on:submit|preventDefault={reset} autocomplete="off">
-    <h2 class="mb-8">Reset password</h2>
+    <h2 class="mb-8">Reset Password</h2>
     <div class="flex flex-col mb-4">
-      <label class="mb-2 font-medium text-gray-600" for="password">New password</label>
+      <label class="mb-2 font-medium text-gray-600" for="password">New Password</label>
       <input
         type="password"
         placeholder="Password"
@@ -78,7 +78,7 @@
     <a href="/login" class="text-midblue">
       <div class="flex">
         <Fa icon={faChevronLeft} class="my-auto mr-1" />
-        <div>Back to sign in</div>
+        <div>Back to Login</div>
       </div>
     </a>
   </form>
