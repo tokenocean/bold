@@ -287,8 +287,8 @@
 <div class="container mx-auto mt-10 md:mt-20">
   <div class="flex flex-wrap">
     <div class="lg:text-left w-full lg:w-1/3 lg:max-w-xs">
-      <h1 class="text-3xl font-black primary-color">
-        {artwork.title || "Untitled"}
+      <h1 class="text-3xl font-black primary-color break-words">
+        {artwork.title || "Unknown Title"}
       </h1>
       <div class="flex mt-4 mb-6">
         <div class="my-auto">
@@ -305,7 +305,7 @@
               <Fa icon={faImage} class="mr-1" />
             </div>
             <div class="my-auto mb-1">
-              <span class="text-sm">Physical artwork</span>
+              <span class="text-sm">Physical Artwork</span>
             </div>
           </div>
         {/if}
@@ -317,7 +317,7 @@
             <Avatar user={artwork.artist} />
             <div class="ml-2 secondary-color">
               <div>@{artwork.artist.username}</div>
-              <div class="text-xs text-gray-600">Artist</div>
+              <div class="text-xs text-gray-600">Creator</div>
             </div>
           </div>
         </a>
@@ -327,18 +327,9 @@
               <Avatar user={artwork.owner} />
               <div class="ml-2">
                 <div>@{artwork.owner.username}</div>
-                <div class="text-xs text-gray-600">Owner</div>
-              </div>
-            </div>
-          </a>
-        {/if}
-        {#if !artwork.held}
-          <a href="https://bitcoin.org/bitcoin.pdf">
-            <div class="flex mb-6 secondary-color">
-              <Avatar src="/satoshi.jpg" />
-              <div class="ml-2">
-                <div>@anon</div>
-                <div class="text-xs text-gray-600">Token Held Externally</div>
+                <div class="text-xs text-gray-600">
+                  {artwork.held ? "" : "Presumed "}Current Owner
+                </div>
               </div>
             </div>
           </a>
@@ -369,7 +360,7 @@
         {/if}
         {#if artwork.bid && artwork.bid.amount}
           <div class="my-2">
-            <div class="text-sm mt-auto">Current bid</div>
+            <div class="text-sm mt-auto">Current Bid</div>
             <div class="text-lg">{val(artwork.bid.amount)} {ticker}</div>
           </div>
         {/if}
@@ -429,7 +420,7 @@
             on:click={buyNow}
             class="secondary-btn"
             {disabled}
-            class:disabled>Buy now</button
+            class:disabled>Buy Now</button
           >
         {/if}
         {#if bidding}
@@ -463,21 +454,21 @@
             on:click={startBidding}
             class="secondary-btn"
             {disabled}
-            class:disabled>Make an offer</button
+            class:disabled>Make An Offer</button
           >
         {/if}
       {/if}
 
       {#if compareAsc(parseISO(artwork.auction_start), now) === 1 && start_counter}
         <div class="bg-gray-100 px-4 p-1 mt-6 rounded">
-          <div class="mt-auto text-sm">Auction starts in</div>
+          <div class="mt-auto text-sm">Auction Starts In</div>
           <div class="mt-1">{start_counter}</div>
         </div>
       {/if}
 
       {#if compareAsc(parseISO(artwork.auction_end), now) === 1 && end_counter}
         <div class="bg-gray-100 px-4 p-1 mt-6 rounded">
-          <div class="mt-auto text-sm">Auction closes in</div>
+          <div class="mt-auto text-sm">Auction Closes In</div>
           <div class="mt-1">{end_counter}</div>
         </div>
       {:else if artwork.auction_end}
@@ -495,7 +486,7 @@
         <div
           class="mob-desc description text-gray-600 whitespace-pre-wrap break-all"
         >
-          <h4 class="mt-10 font-bold">About this artwork</h4>
+          <h4 class="mt-10 font-bold">About This Artwork</h4>
           <div class="desc-text {showMore ? 'openDesc' : ''}">
             {@html linkify(artwork.description)}
           </div>
@@ -535,8 +526,8 @@
       </div>
 
       {#if artwork.description}
-        <div class="desk-desc description text-gray-600">
-          <h4 class="mt-10 mb-5 font-bold">About this artwork</h4>
+        <div class="desk-desc description text-gray-600 break-words">
+          <h4 class="mt-10 mb-5 font-bold">About This Artwork</h4>
           <div class="whitespace-pre-wrap">
             {@html linkify(artwork.description)}
           </div>
@@ -568,7 +559,7 @@
       {#if others.length}
         <div class="w-full mb-4">
           <h2 class="text-2xl font-bold primary-color py-10 px-0">
-            More by this artist
+            More By This Creator
           </h2>
           <div class="w-full grid md:grid-cols-3 gap-4 others">
             {#each others as artwork (artwork.id)}
@@ -579,7 +570,7 @@
         <div class="flex w-full">
           <a
             class="primary-btn mx-auto mb-12"
-            href={`/artist/${artwork.artist.username}`}>View all</a
+            href={`/artist/${artwork.artist.username}`}>View All</a
           >
         </div>
       {/if}
