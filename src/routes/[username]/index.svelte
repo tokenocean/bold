@@ -159,7 +159,7 @@
               class:hover={tab === "creations"}
               on:click={() => (tab = "creations")}
             >
-              Creations
+              Artworks
             </div>
           {/if}
           <div
@@ -186,8 +186,8 @@
         {#if tab === "creations"}
           <div class="w-full justify-center">
             <div class="w-full max-w-sm mx-auto mb-12">
-              {#if $session.user && $session.user.is_artist && $session.user.id === subject.id}
-                <a href="/a/create" class="primary-btn">Submit a new artwork</a>
+              {#if $user && $user.is_artist && $user.id === subject.id}
+                <a href="/a/create" class="primary-btn">Create New Artwork</a>
               {/if}
             </div>
             <div class="w-full flex flex-wrap">
@@ -196,7 +196,7 @@
                   <Card {artwork} />
                 </div>
               {:else}
-                <div class="mx-auto">No creations yet</div>
+                <div class="mx-auto">You Haven't Created Artwork Yet</div>
               {/each}
               {#if $artworksLimit !== undefined && subject.creations.length}
                 <button
@@ -217,7 +217,7 @@
                   <Card {artwork} />
                 </div>
               {:else}
-                <div class="mx-auto">Nothing collected yet</div>
+                <div class="mx-auto">No Artwork Collected Yet</div>
               {/each}
               {#if $artworksLimit !== undefined && subject.holdings.length}
                 <button
@@ -240,7 +240,7 @@
                   <Card {artwork} />
                 </div>
               {:else}
-                <div class="mx-auto">No favorites yet</div>
+                <div class="mx-auto">No Artwork Favorited Yet</div>
               {/each}
             </div>
           </div>
