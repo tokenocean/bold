@@ -196,9 +196,8 @@
           {#if tab === "lightning" && !showInvoice}
             <div
               class="flex w-1/4 ml-2 text-right whitespace-nowrap text-sm secondary-color cursor-pointer"
-              on:click={toggle}
-            >
-              Show invoice
+              on:click={toggle}>
+              Show Invoice
               <div class="my-auto ml-1">
                 <Fa icon={faChevronDown} />
               </div>
@@ -208,9 +207,8 @@
         {#if tab === "lightning" && showInvoice}
           <div
             class="flex w-1/4 mx-auto mt-2 text-right whitespace-nowrap text-sm secondary-color cursor-pointer"
-            on:click={toggle}
-          >
-            Hide invoice
+            on:click={toggle}>
+            Hide Invoice
             <div class="my-auto ml-1">
               <Fa icon={faChevronUp} />
             </div>
