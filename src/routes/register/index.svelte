@@ -94,11 +94,11 @@
     {:else if registered}
       <h2 class="mb-8">Registered!</h2>
       <p>
-        Thanks for registering. Please check your email for an activation link.
+        Thanks for registering with the Bold Gallery. Please check your email for an activation link.
       </p>
 
       <p class="mt-4">
-        <a href="/login" class="text-secondary">Continue to sign in page</a>
+        <a href="/login" class="text-secondary">Proceed to Login</a>
       </p>
     {:else}
       <h2 class="mb-8">Sign up</h2>
