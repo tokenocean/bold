@@ -53,7 +53,7 @@
   <form class="mb-6" on:submit|preventDefault={login} autocomplete="off">
     <h2 class="mb-8">Sign In</h2>
     <div class="flex flex-col mb-4">
-      <label class="mb-2 font-medium" for="first_name">Email or username</label>
+      <label class="mb-2 font-medium" for="first_name">Email or Username</label>
       <input
         bind:value={email}
         bind:this={emailInput}
@@ -90,7 +90,7 @@
     <div class="flex my-5 justify-end">
       <button class="primary-btn w-full" type="submit">Sign In</button>
     </div>
-    <a href="/register" class="text-midblue">Don't have an account? Sign up</a>
+    <a href="/register" class="text-midblue">Sign Up For Account</a>
   </form>
 </div>
 
