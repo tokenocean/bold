@@ -23,7 +23,7 @@
           >
             <Fa icon={faChevronLeft} class="my-auto mr-2" />
             <div class="sm:hidden">Profile</div>
-            <div class="hidden sm:block">Back to profile</div>
+            <div class="hidden sm:block">Back to Profile</div>
           </div>
         </a>
         {#if $assets.length > 1}
@@ -33,7 +33,7 @@
             >
               <Fa icon={faDollarSign} class="my-auto mr-2" />
               <div class="sm:hidden">Asset</div>
-              <div class="hidden sm:block">Change asset</div>
+              <div class="hidden sm:block">Change Asset</div>
             </div>
           </a>
         {/if}
