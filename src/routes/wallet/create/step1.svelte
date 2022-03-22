@@ -28,23 +28,23 @@
       <i class="text-lightblue">
         <Fa icon={faStickyNote} /></i>
       <span class="-mt-1">Write on actual paper instead of keeping it in a
-        digital format in your device.</span>
+        digital format in your device. (i.e. screenshots, the cloud)</span>
     </li>
     <li class="flex">
       <i class="text-lightblue">
         <Fa icon={faLock} />
       </i>
       <span class="-mt-1">Wait until you are on a personal device and in a
-        private environment.</span>
+        private environment. (Avoid connecting to public wifi like coffee shops)</span>
     </li>
     <li class="flex">
       <i class="text-lightblue">
         <Fa icon={faWallet} />
       </i>
       <span class="-mt-1">The backup phrase is essential to restore your wallet.
-        Make sure its accurate and kept safe.</span>
+        Make sure its accurate and kept safe.!</span>
     </li>
   </ul>
 
-  <a href="/wallet/create/step2" class="primary-btn w-full">Create wallet</a>
+  <a href="/wallet/create/step2" class="primary-btn w-full">Create Wallet</a>
 </div>
