@@ -58,9 +58,9 @@
         <div>Back</div>
       </div>
     </a>
-    <h3 class="py-4">Transaction details</h3>
+    <h3 class="py-4">Transaction Details</h3>
   </div>
   {#if done && $psbt}
     <Transaction {tx} />
-  {:else}Transaction not found{/if}
+  {:else}Transaction Not Found{/if}
 </div>
