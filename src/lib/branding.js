@@ -1,38 +1,38 @@
 const BRANDING = {
-  projectName: "The Bold",
+  projectName: "Bold Gallery",
 
-  superUserName: "bold",
+  superUserName: "boldgallery",
 
   urls: {
     base: "bold.gallery",
     www: "www.bold.gallery",
     protocol: "https://bold.gallery",
     external: {
-      twitter: "https://twitter.com/bold",
-      telegram: "https://t.me/bold",
+      twitter: "https://twitter.com/boldgallery",
+      telegram: "https://t.me/+GJWJsDVkWEYyMzYx",
       blog: "https://blog.bold.gallery/",
       facebook: "https://facebook.com/bold",
-      instagram: "https://www.instagram.com/bold/",
+      instagram: "https://www.instagram.com/boldgalleryart/",
       discord: "https://discord.gg/XUxPs3YnQz",
     },
   },
 
   meta: {
-    title: "The Bold",
-    keywords: "Bitcoin Liquid NFT Art",
+    title: "Bold Gallery",
+    keywords: "Bold Gallery NFT Marketplace",
     description:
-      "Upload, collect, and transact rare digital art on the Liquid Network",
+      "The preeminent marketplace for verified NFTs from creatives, artists, innovators and brands building in the Bitcoin ecosystem.",
     image: "https://bold.gallery/splash.png",
     url: "https://bold.gallery/",
 
     twitter: {
       card: "summary_large_image",
-      creator: "@bold",
-      site: "@bold",
+      creator: "@boldgallery",
+      site: "@boldgallery",
     },
 
     artwork: (art) => ({
-      title: `The Bold - ${art.title}`,
+      title: `Bold Gallery - ${art.title}`,
       image: `/api/ipfs/${art.filename}`,
       url: `https://bold.gallery/a/${art.slug}`,
     }),
