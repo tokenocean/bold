@@ -41,7 +41,7 @@
             >
               {artwork.artist.username}
             </p>
-            <p class="text-sm text-gray-500">Artist</p>
+            <p class="text-sm text-gray-500">Creator</p>
           </div>
         </div>
       </div>
