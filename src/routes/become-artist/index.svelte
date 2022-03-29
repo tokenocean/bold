@@ -284,7 +284,7 @@
       <h2 class="mb-10">Become A Creator</h2>
       {#if submitted}
         <div>
-          Thank you! Your creator application has been submitted. After we've have had a 
+          Thank you! Your creator application has been submitted. After we've had a 
           chance to review it, if you've been approved, we'll follow up by email!
         </div>
       {:else}
@@ -337,7 +337,7 @@
               <input placeholder="example.com" bind:value={form.website} />
             </div>
             <div class="flex flex-col mb-4">
-              <label for="info">Extra information</label>
+              <label for="info">Additional Information</label>
               <textarea id="info" placeholder="" bind:value={form.info} />
             </div>
             <div class="flex justify-end mt-8">
