@@ -622,9 +622,9 @@
             <a href="mailto:{branding.emails.support}" target="_blank">Email</a>
           </li>
           <li>
-            <a href="/terms-and-conditions" target="_blank">Terms of Service</a>
+            <a href="https://bold.gallery/terms" target="_blank">Terms of Service</a>
           </li>
-          <li><a href="/privacy-policy" target="_blank">Privacy Policy</a></li>
+          <li><a href="https://bold.gallery/privacy-policy" target="_blank">Privacy Policy</a></li>
         </ul>
       </div>
     </div>
