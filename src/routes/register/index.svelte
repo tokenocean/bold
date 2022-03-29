@@ -156,10 +156,10 @@
         </div>
       </div>
       <span class="block w-full">By signing up, you agree to the
-        <a href="/terms-and-conditions">Terms and
+        <a href="https://bold.gallery/terms">Terms and
           Conditions</a>
         and
-        <a href="/privacy-policy">Privacy Policy</a></span>
+        <a href="https://bold.gallery/privacy-policy">Privacy Policy</a></span>
       <div class="flex my-5 justify-end">
         <button class="primary-btn w-full" type="submit">Register</button>
       </div>
