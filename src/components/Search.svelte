@@ -69,7 +69,7 @@
     <div class="flex">
       <input
         class="lg:w-1/3 border-0 border-b-2 rounded-none border-lightblue"
-        placeholder="Search..."
+        placeholder="Search Gallery"
         on:input={({ target: { value } }) => debounce(value)}
       />
       <div class="my-auto ml-2">
