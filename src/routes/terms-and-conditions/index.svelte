@@ -89,7 +89,7 @@
         <h3>Privacy Policy</h3>
 
         Our
-        <a href="/privacy-policy">Privacy Policy can be found here</a>
+        <a href="https://bold.gallery/privacy-policy">Privacy Policy can be found here</a>
         and it describes the ways we collect, use, store and disclose your
         personal information. You agree to the collection, use, storage, and
         disclosure of your data in accordance with our Privacy Policy.
