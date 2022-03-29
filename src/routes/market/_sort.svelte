@@ -9,12 +9,12 @@
     class="rounded-full appearance-none bg-gray-100 px-8"
     bind:value={$sortCriteria}
   >
-    <option value="lowest">Lowest price</option>
-    <option value="highest">Highest price</option>
+    <option value="lowest">Lowest Price</option>
+    <option value="highest">Highest Price</option>
     <option value="newest">Newest</option>
     <option value="oldest">Oldest</option>
-    <option value="ending_soon">Ending soon</option>
-    <option value="most_viewed">Most viewed</option>
+    <option value="ending_soon">Ending Soon</option>
+    <option value="most_viewed">Most Viewed</option>
   </select>
 </div>
 
