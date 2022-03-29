@@ -165,7 +165,7 @@
       </div>
 
       <a href="/login" class="text-midblue">
-        Already have an account? Sign in</a>
+        Already a collector? Log in</a>
     {/if}
   </form>
 </div>
