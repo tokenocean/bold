@@ -246,7 +246,7 @@
         </p>
 
         <p class="w-full text-center italic mt-10">
-          This Privacy Policy was last updated on May 19th, 2021.
+          This Privacy Policy was last updated on March 22nd, 2022.
         </p>
       </div>
     </div>
