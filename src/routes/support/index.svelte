@@ -294,11 +294,11 @@
           <div class="item" id="upload-artwork-and-mint-nft">
             <h3>4. MINTING NFTs</h3>
             <p>
-              All new accounts in the Bold Gallery are “Viewer” accounts. With this type of
+              All new accounts in the Bold Gallery are “Collector” accounts. With this type of
               account you can view artworks and NTFs in the secondary
               market, but you can’t trade, upload or mint NFTs. These options are
               reserved for users with an verified or creator account. Creators will get their
-              accounts tagged as “Artist” during the onboarding process.
+              accounts tagged as “Creator” during the onboarding process.
             </p>
             <p>
               To upload their artwork, creators can go to their profile page and
