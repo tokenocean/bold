@@ -244,8 +244,8 @@
                 {#if percent < 100}
                   {percent}%
                 {:else if artwork.filename}
-                  Upload complete!
-                {:else}Processing...{/if}
+                  Upload Successful!
+                {:else}Uploading...{/if}
               </div>
             </div>
           </div>
