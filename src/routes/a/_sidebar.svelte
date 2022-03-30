@@ -51,7 +51,7 @@
 
   {#if showDetails}
     <div class="text-sm text-gray-600 break-all mt-6 mb-2">
-      <div class="text-xs">Liquid Asset Id</div>
+      <div class="text-xs">Liquid Asset ID</div>
       <a
         href={`${explorer}/asset/${artwork.asset}`}
         class="secondary-color">{artwork.asset}</a>
