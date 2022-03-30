@@ -9,15 +9,15 @@
 
 <div class="w-full md:w-full lg:w-1/2 watch-table">
   <div class="border-gray-400 border-b-2 flex justify-between">
-    <p class="text-xl">{title}</p>
-    <div class="mb-4">{stat}</div>
+    <p class="text-xl">{Title}</p>
+    <div class="mb-4">{Stat}</div>
   </div>
   <div>
     {#each items as item}
       <Row {item} {link} />
     {/each}
   </div>
-  <a class="block text-right" href={link}>See all</a>
+  <a class="block text-right" href={link}>See All</a>
 </div>
 
 <style>
