@@ -15,11 +15,6 @@
   <a sveltekit:prefetch href="/market"
     ><button on:click={toggle}>Gallery</button></a
   >
-  <a sveltekit:prefetch href="/activity"
-    ><button on:click={toggle}>Activity</button></a
-  >
-  <a href="https://www.bold.gallery/guide"
-     ><button on:click={toggle}>User Guide</button></a>
   {#if $session?.user}
     {#if $session.user.is_admin}
       <a href="/admin"><button on:click={toggle}>Admin</button></a>
