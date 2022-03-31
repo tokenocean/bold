@@ -428,7 +428,7 @@
 
       <form class="w-full mb-6 mt-12" on:submit={update} autocomplete="off">
         <div class="flex flex-col mt-4">
-          <p>Listing currency</p>
+          <p>Currency Choice</p>
           <div class="flex flex-wrap">
             {#each listingCurrencies as asset}
               <label for={asset} class="ml-2 mr-6 flex items-center">
@@ -462,7 +462,7 @@
                   <span class="tooltip-text bg-gray-100 shadow ml-4 rounded">
                     Setting a price is optional. If you set one, your wallet
                     will generate a partially signed atomic swap transaction. If
-                    you run an auction, this price will be the "buy it now" or
+                    you run an auction, this price will be the "Buy Now" or
                     buyout price that lets people skip the bidding process and
                     immediately purchase the artwork.
                     <br /><br />
@@ -537,7 +537,7 @@
                 bind:checked={auction_enabled}
                 disabled={auction_underway}
               />
-              <span class="ml-3 text-xl">Create An Auction</span>
+              <span class="ml-3 text-xl">Create Auction</span>
             </label>
           </div>
           {#if auction_enabled}
