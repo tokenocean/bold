@@ -101,7 +101,7 @@
         <a href="/login" class="text-secondary">Proceed to Login</a>
       </p>
     {:else}
-      <h2 class="mb-8">Sign up</h2>
+      <h2 class="mb-8">Sign Up</h2>
       <div class="flex flex-col mb-4">
         <label
           class="mb-2 font-medium text-gray-600"
@@ -165,7 +165,7 @@
       </div>
 
       <a href="/login" class="text-midblue">
-        Already a collector? Log in</a>
+        Already a collector? Login</a>
     {/if}
   </form>
 </div>
