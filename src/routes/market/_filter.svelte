@@ -26,7 +26,7 @@
   <div>
     <ToggleSwitch
       id="list-price"
-      label="Currently Listed"
+      label="Buy Now"
       checked={$fc.listPrice}
       on:change={(e) => ($fc.listPrice = e.target.checked)}
     />
