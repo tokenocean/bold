@@ -40,7 +40,7 @@
 <div class="flex header-container mx-auto justify-center marg-bottom p-12">
   <div class="header text-center">
     <h1 class="text-white text-left md:text-center md:w-full">
-      Collect From The Boldest Creators
+      Collect Artwork From The Boldest Creators 
     </h1>
     
     <p>
