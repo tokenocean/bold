@@ -92,12 +92,7 @@
         <li class="mb-2">
           <a href="https://blockstream.com/liquid/">The Liquid Network</a>
         </li>
-<<<<<<< HEAD
-=======
-        <li class="mb-2"><a href="/guide">User Guide</a></li>
-        <li class="mb-2"><a href="/faq">FAQs</a></li>
-        <li class="mb-2"><a href="mailto:support@raretoshi">Support</a></li>
->>>>>>> 4037894 (logo changes)
+        <li class="mb-2"><a href="mailto:support@bold.gallery">Support</a></li>
         <li class="mb-2"><a href="/privacy-policy">Privacy Policy</a></li>
         <li class="mb-2">
           <a href="/terms-and-conditions">Terms of Service</a>
