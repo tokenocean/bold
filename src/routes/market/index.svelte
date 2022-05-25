@@ -90,7 +90,7 @@
   class="container mx-auto flex flex-wrap flex-col-reverse md:flex-row sm:justify-between mt-10 md:mt-20"
 >
   <h2 class="md:mb-0">Gallery</h2>
-  {#if $user && $user.is_artist}
+  {#if $session.user && $session.user.is_artist}
     <a href="/a/create" class="primary-btn" data-cy="new-artwork"
       >Create New Artwork</a
     >
