@@ -186,7 +186,7 @@
         {#if tab === "creations"}
           <div class="w-full justify-center">
             <div class="w-full max-w-sm mx-auto mb-12">
-              {#if $user && $user.is_artist && $user.id === subject.id}
+              {#if $session.user && $session.user.is_artist && $session.user.id === subject.id}
                 <a href="/a/create" class="primary-btn">Create New Artwork</a>
               {/if}
             </div>
