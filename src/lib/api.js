@@ -1,3 +1,4 @@
+import { browser } from "$app/env";
 import cookie from "cookie";
 import wretch from "wretch";
 import * as middlewares from "wretch-middlewares";
@@ -6,11 +7,25 @@ import { err } from "$lib/utils";
 import { token } from "$lib/store";
 
 export const host = import.meta.env.VITE_HOST;
+export const app = import.meta.env.VITE_APP;
 
 const { retry } = middlewares.default || middlewares;
 
 export const api = wretch().url(`${host}/api`);
-export const electrs = wretch().url(`${host}/api/el`);
+
+export const newapi = (headers) => {
+  let url = import.meta.env.VITE_APP;
+  let jwt = headers && cookie.parse(headers.get("cookie") || "").token;
+
+  if (browser) {
+    url = `${host}/api` 
+    jwt = getStore(token);
+  } 
+
+  return wretch().url(url).auth(jwt ? `Bearer ${jwt}` : undefined);
+} 
+  
+export const electrs = wretch().url(`${app}/el`);
 
 export const hasura = wretch()
   .middlewares([retry({ maxAttempts: 2 })])
