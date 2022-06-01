@@ -11,9 +11,12 @@
 
 <div class="flex justify-between items-center menu relative">
   <Search suggest={false} />
-  <a href="https://www.bold.gallery"><button on:click={toggle}><div>Home</div></button></a>
+  <a href="https://www.bold.gallery"
+    ><button on:click={toggle}><div>Home</div></button></a
+  >
   <a sveltekit:prefetch href="/market"
-                        ><button on:click={toggle} class:active={path === "/market"}><div>Gallery</div></button
+    ><button on:click={toggle} class:active={path === "/market"}
+      ><div>Gallery</div></button
     ></a
   >
   {#if $session?.user}
@@ -22,9 +25,11 @@
         <Avatar user={$session.user} />
       </button></a
     >
-  {:else}<a href="/login"><button on:click={toggle} 
-     class:active={path === "/login"}
-            ><div>Log In</div></button></a>{/if}
+  {:else}<a href="/login"
+      ><button on:click={toggle} class:active={path === "/login"}
+        ><div>Log In</div></button
+      ></a
+    >{/if}
 </div>
 
 <style>
@@ -36,7 +41,7 @@
 
   .menu button {
     font-weight: bold;
-  } 
+  }
 
   .active,
   .menu button:hover {
@@ -45,11 +50,12 @@
 
   .menu button div {
     border-bottom: 3px solid white;
-  } 
+  }
 
-  .menu button:hover div, .menu .active div {
+  .menu button:hover div,
+  .menu .active div {
     border-bottom: 3px solid #0bd3d3;
-  } 
+  }
 
   .menu button {
     @apply mx-4;

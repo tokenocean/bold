@@ -3,7 +3,7 @@
   import Fa from "svelte-fa";
   import {
     faFacebook,
-    faInstagramSquare,
+    faInstagram,
     faTelegramPlane,
     faDiscord,
     faTwitter,
@@ -16,88 +16,98 @@
 </script>
 
 <div class="bg-white px-2 mt-24">
-  <div class="container footer mx-auto flex flex-wrap text-white pt-12">
-    <div
-      class="flex flex-col text-sm w-full lg:w-2/4 mb-10 order-last lg:order-first">
-      <a href="/"><img src="/logo.png" alt="logo" class="w-48" /></a>
-      <p class="mt-4">&copy;{year}{branding.projectName}</p>
-      <div class="flex items-center mt-12">
-        <p class="pr-3">Powered by:</p>
-        <img src="/liquid_logo.svg" alt="liquid network logo" />
-      </div>
-    </div>
-    <div class="w-full lg:w-1/4 mb-10">
-      <h4 class="font-bold mb-4">Join Us</h4>
-      <ul class="list-none">
-        <li class="mb-2">
-          <a
-            target="_blank"
-            href={branding.urls.external.blog}
-            class="flex items-center"><div class="w-6 mr-1">
-              <Fa icon={faRss} />
-            </div>
-            Blog</a>
-        </li>
-        <li class="mb-2">
-          <a
-            target="_blank"
-            href={branding.urls.external.twitter}
-            class="flex items-center"><div class="w-6 mr-1">
-              <Fa icon={faTwitter} />
-            </div>
-            Twitter</a>
-        </li>
-        <li class="mb-2">
-          <a
-            target="_blank"
-            href={branding.urls.external.discord}
-            class="flex items-center"><div class="w-6 mr-1">
-              <Fa icon={faDiscord} size="sm" />
-            </div>
-            Discord</a>
-        </li>
-        <li class="mb-2">
-          <a
-            target="_blank"
-            href={branding.urls.external.telegram}
-            class="flex items-center"><div class="w-6 mr-1">
-              <Fa icon={faTelegramPlane} />
-            </div>
-            Telegram</a>
-        </li>
-        <li class="mb-2">
-          <a
-            target="_blank"
-            href={branding.urls.external.instagram}
-            class="flex items-center"><div class="w-6 mr-1">
-              <Fa icon={faInstagramSquare} />
-            </div>
-            Instagram</a>
-        </li>
-        <li class="mb-2">
-          <a
-            target="_blank"
-            href={branding.urls.external.facebook}
-            class="flex items-center"><div class="w-6 mr-1">
-              <Fa icon={faFacebook} />
-            </div>
-            Facebook</a>
-        </li>
-      </ul>
-    </div>
-    <div class="w-full lg:w-1/4 mb-10">
-      <h4 class="font-bold mb-4">Help</h4>
-      <ul class="list-none">
-        <li class="mb-2"><a href="/help">Help</a></li>
-        <li class="mb-2">
-          <a href="https://blockstream.com/liquid/">The Liquid Network</a>
-        </li>
-        <li class="mb-2"><a href="mailto:support@bold.gallery">Support</a></li>
-        <li class="mb-2"><a href="/privacy-policy">Privacy Policy</a></li>
-        <li class="mb-2">
-          <a href="/terms-and-conditions">Terms of Service</a>
-        </li>
-      </ul>
-    </div>
+  <div class="container footer mx-auto text-white pt-12 flex">
+    <ul class="list-none flex my-auto">
+      <li class="mr-6">
+        <a
+          target="_blank"
+          href={branding.urls.external.twitter}
+          class="flex items-center"><div class="w-6 mr-1">
+            <Fa icon={faTwitter} color="#1DA1F2" size="lg" />
+        </div>
+        </a>
+      </li>
+      <li class="mr-6">
+        <a
+          target="_blank"
+          href={branding.urls.external.blog}
+          class="flex items-center"><div class="w-6 mr-1">
+            <Fa icon={faInstagram} color="#BC2A8D" size="lg" />
+        </div>
+        </a>
+      </li>
+      <li>
+        <a
+          target="_blank"
+          href={branding.urls.external.discord}
+          class="flex items-center"><div class="w-6 mr-1">
+            <Fa icon={faDiscord} size="lg" color="#5865F2" />
+        </div>
+        </a>
+      </li>
+    </ul>
+    <ul class="menu list-none flex flex-wrap mx-4 mx-auto w-full text-center justify-center my-auto">
+      <li class="mb-2">
+        <a
+          target="_blank"
+          href={branding.urls.external.blog}
+          class="flex items-center">
+        <div>User Guide</div></a>
+      </li>
+      <li class="mb-2">
+        <a
+          target="_blank"
+          href="mailto:info@bold.gallery"
+          class="flex items-center">
+        <div>Contact</div></a>
+      </li>
+      <li class="mb-2">
+        <a
+          target="_blank"
+          href="https://bold.gallery/terms-conditions/"
+          class="flex items-center">
+          <div>Terms & Conditions</div></a>
+      </li>
+      <li class="mb-2">
+        <a
+          target="_blank"
+          href="https://bold.gallery/privacy-policy/"
+          class="flex items-center">
+          <div>Privacy Policy</div></a>
+      </li>
+    </ul>
+    <p class="whitespace-nowrap my-auto mb-2">© Bold Gallery 2022 All Rights Reserved</p>
   </div>
 </div>
+
+<style>
+  .footer {
+    font-family: "DM Serif Display", serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #7a7a7a;
+  }
+
+  .menu a {
+    padding: 0px 30px;
+  } 
+
+  .menu li {
+    @apply whitespace-nowrap;
+    width: auto;
+  } 
+
+  .menu .active,
+  .menu li:hover div {
+    color: #0bd3d3;
+  }
+
+  .menu a {
+    border-bottom: 3px solid white;
+  }
+
+  .menu li a:hover,
+  .menu .active a {
+    border-bottom: 3px solid #0bd3d3;
+  }
+ </style> 
