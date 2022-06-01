@@ -1,34 +1,58 @@
 <script>
   import branding from "$lib/branding";
-  import { session } from "$app/stores";
+  import { page, session } from "$app/stores";
   import { Avatar, Search } from "$comp";
 
   export let open = false;
   let toggle = () => (open = !open);
+
+  $: path = $page.url.pathname;
 </script>
 
 <div class="flex justify-between items-center menu relative">
   <Search suggest={false} />
-  <a href="https://www.bold.gallery"
-     ><button on:click={toggle}>Home</button></a
-  >
+  <a href="https://www.bold.gallery"><button on:click={toggle}><div>Home</div></button></a>
   <a sveltekit:prefetch href="/market"
-    ><button on:click={toggle}>Gallery</button></a
+                        ><button on:click={toggle} class:active={path === "/market"}><div>Gallery</div></button
+    ></a
   >
   {#if $session?.user}
-    {#if $session.user.is_admin}
-      <a href="/admin"><button on:click={toggle}>Admin</button></a>
-    {/if}
     <a href={`/${$session.user?.username}`}>
       <button on:click={toggle} class="flex">
         <Avatar user={$session.user} />
       </button></a
     >
-  {:else}<a href="/login"><button on:click={toggle}>Log In</button></a>{/if}
+  {:else}<a href="/login"><button on:click={toggle} 
+     class:active={path === "/login"}
+            ><div>Log In</div></button></a>{/if}
 </div>
 
 <style>
+  .menu {
+    font-family: "DM Serif Display", serif;
+    font-size: 14px;
+    color: #7a7a7a;
+  }
+
   .menu button {
+    font-weight: bold;
+  } 
+
+  .active,
+  .menu button:hover {
+    color: #0bd3d3;
+  }
+
+  .menu button div {
+    border-bottom: 3px solid white;
+  } 
+
+  .menu button:hover div, .menu .active div {
+    border-bottom: 3px solid #0bd3d3;
+  } 
+
+  .menu button {
+    @apply mx-4;
     width: auto;
     text-align: left;
     padding: 0 20px;
