@@ -60,14 +60,14 @@
 
   .menu :global(.search) {
     border: 1px solid lightgray;
-    border-radius: 30px;
+    border-radius: 4px;
     margin-right: 15px;
     width: 250px;
   }
 
   .menu :global(.search):focus-within {
     border: 1px solid #5c5d60;
-    border-radius: 30px;
+    border-radius: 4px;
   }
 
   .menu :global(input) {

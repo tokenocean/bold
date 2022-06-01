@@ -2,8 +2,10 @@ import cookie from "cookie";
 import wretch from "wretch";
 import * as middlewares from "wretch-middlewares";
 import { get as getStore } from "svelte/store";
-import { err, host } from "$lib/utils";
+import { err } from "$lib/utils";
 import { token } from "$lib/store";
+
+export const host = import.meta.env.VITE_HOST;
 
 const { retry } = middlewares.default || middlewares;
 

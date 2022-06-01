@@ -145,6 +145,7 @@
   textarea,
   select {
     @apply border bg-white focus:outline-none;
+    border-radius: 4px !important;
     overflow-y: auto;
     padding: 0;
     padding: 10px;
