@@ -21,7 +21,7 @@
       <li class="mr-6">
         <a
           target="_blank"
-          href={branding.urls.external.twitter}
+          href="https://twitter.com/boldgallery"
           class="flex items-center"><div class="w-6 mr-1">
             <Fa icon={faTwitter} color="#1DA1F2" size="lg" />
         </div>
@@ -30,7 +30,7 @@
       <li class="mr-6">
         <a
           target="_blank"
-          href={branding.urls.external.blog}
+          href="https://www.instagram.com/boldgalleryart/"
           class="flex items-center"><div class="w-6 mr-1">
             <Fa icon={faInstagram} color="#BC2A8D" size="lg" />
         </div>
@@ -39,7 +39,7 @@
       <li>
         <a
           target="_blank"
-          href={branding.urls.external.discord}
+          href="https://discord.com/invite/mkE6UnMTe6"
           class="flex items-center"><div class="w-6 mr-1">
             <Fa icon={faDiscord} size="lg" color="#5865F2" />
         </div>
@@ -50,7 +50,7 @@
       <li class="mb-2">
         <a
           target="_blank"
-          href={branding.urls.external.blog}
+          href="https://bold.gallery/guide/"
           class="flex items-center">
         <div>User Guide</div></a>
       </li>
