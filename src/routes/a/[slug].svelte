@@ -312,24 +312,30 @@
       </div>
 
       <div class="flex flex-wrap justify-between text-left">
-        <a href={`/${artwork.artist.username}`}>
-          <div class="flex mb-6">
-            <Avatar user={artwork.artist} />
-            <div class="ml-2 secondary-color">
-              <div>@{artwork.artist.username}</div>
-              <div class="text-xs text-gray-600">Creator</div>
+        <div class="flex mb-6">
+          <Avatar user={artwork.artist} />
+          <div class="ml-2 secondary-color">
+            <div>@{artwork.artist.username}</div>
+            <div class="text-xs text-gray-600">Artist</div>
+          </div>
+        </div>
+
+        {#if artwork.artist_id !== artwork.owner_id && artwork.held}
+          <div class="flex mb-6 secondary-color">
+            <Avatar user={artwork.owner} />
+            <div class="ml-2">
+              <div>@{artwork.owner.username}</div>
+              <div class="text-xs text-gray-600">Owner</div>
             </div>
           </div>
-        </a>
-        {#if artwork.artist_id !== artwork.owner_id && artwork.held}
-          <a href={`/${artwork.owner.username}`}>
+        {/if}
+        {#if !artwork.held}
+          <a href="https://bitcoin.org/bitcoin.pdf">
             <div class="flex mb-6 secondary-color">
-              <Avatar user={artwork.owner} />
+              <Avatar src="/satoshi.jpg" />
               <div class="ml-2">
-                <div>@{artwork.owner.username}</div>
-                <div class="text-xs text-gray-600">
-                  {artwork.held ? "" : "Presumed "}Current Owner
-                </div>
+                <div>@anon</div>
+                <div class="text-xs text-gray-600">Token Held Externally</div>
               </div>
             </div>
           </a>
@@ -407,7 +413,7 @@
           </div>
           <div class="w-full mb-2">
             <a
-              href={'JavaScript:void(0)'}
+              href={"JavaScript:void(0)"}
               on:click={handleDelete}
               class="block text-center text-sm secondary-btn w-full cursor-pointer"
               >Delete</a
