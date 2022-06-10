@@ -1,6 +1,6 @@
 <script>
-  import branding from "$lib/branding";
   import { page, session } from "$app/stores";
+  import branding from "$lib/branding";
   import { Avatar, Search } from "$comp";
 
   export let open = false;
@@ -25,11 +25,13 @@
         <Avatar user={$session.user} />
       </button></a
     >
-  {:else}<a href="/login"
+  {:else}
+    <a href="/login"
       ><button on:click={toggle} class:active={path === "/login"}
         ><div>Log In</div></button
-      ></a
-    >{/if}
+      >
+    </a>
+  {/if}
 </div>
 
 <style>
