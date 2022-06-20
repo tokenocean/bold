@@ -7,7 +7,7 @@ const sleep = (n) => new Promise((r) => setTimeout(r, n));
 import { btc, network } from "./wallet.js";
 import { app } from "./app.js";
 import { auth } from "./auth.js";
-import { wait } from "./utils.js";
+import { getUser, wait } from "./utils.js";
 
 import {
   cancelBid,
@@ -17,6 +17,7 @@ import {
   deleteUtxo,
   getActiveBids,
   getActiveListings,
+  getAssetArtworks,
   getAvatars,
   getContract,
   getCurrentUser,
@@ -229,22 +230,26 @@ app.get("/proof/liquid-asset-proof-:asset", (req, res) => {
   else res.code(500).send("Unrecognized asset");
 });
 
-let getUser = async (headers) => {
-  let { data, errors } = await api(headers)
-    .post({ query: getCurrentUser })
-    .json();
-  if (errors) throw new Error(errors[0].message);
-  return data.currentuser[0];
-};
-
+let titles = {};
 app.get("/transactions", auth, async (req, res) => {
   try {
-    let { id, address, multisig } = await getUser(req.headers);
+    let { id, address, multisig } = await getUser(req);
 
     await updateTransactions(address, id);
     await updateTransactions(multisig, id);
 
-    res.send(await q(getTransactions, { id }));
+    let { transactions } = await q(getTransactions, { id });
+    for (let i = 0; i < transactions.length; i++) {
+      let { asset } = transactions[i];
+      if (asset !== btc && !titles[asset]) {
+        let { artworks } = await q(getAssetArtworks, { assets: transactions.map(tx => tx.asset) });
+        artworks.map((a) => (titles[a.asset] = a.title));
+      } 
+
+      transactions[i].label = titles[asset];
+    } 
+
+    res.send(transactions);
   } catch (e) {
     console.log(e);
     res.code(500).send(e.message);
@@ -317,7 +322,7 @@ let updateTransactions = async (address, user_id) => {
         txcache[prev] = tx;
 
         let { asset, value, scriptpubkey_address: a } = tx.vout[vout];
-        if (address === a) total[asset] = (total[asset] || 0) - parseInt(value);
+        if (asset && address === a) total[asset] = (total[asset] || 0) - parseInt(value);
       } catch (e) {
         console.log("problem finding input", prev, e);
       }
@@ -325,7 +330,7 @@ let updateTransactions = async (address, user_id) => {
 
     for (let k = 0; k < vout.length; k++) {
       let { asset, value, scriptpubkey_address: a } = vout[k];
-      if (address === a) total[asset] = (total[asset] || 0) + parseInt(value);
+      if (asset && address === a) total[asset] = (total[asset] || 0) + parseInt(value);
     }
 
     let assets = Object.keys(total);
@@ -489,7 +494,7 @@ let scanUtxos = async (address) => {
 
 app.get("/balance", auth, async (req, res) => {
   try {
-    let { address, multisig, id, last_seen_tx } = await getUser(req.headers);
+    let { address, multisig, id, last_seen_tx } = await getUser(req);
     let outs = [...(await scanUtxos(address)), ...(await scanUtxos(multisig))];
     let pending = [];
 
