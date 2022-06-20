@@ -17,7 +17,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@sveltejs/adapter-node": "^1.0.0-next.73",
-    "@sveltejs/kit": "^1.0.0-next.324",
+    "@sveltejs/kit": "1.0.0-next.350",
     "autoprefixer": "^10.4.7",
     "bip32": "^2.0.6",
     "bip39": "^3.0.4",
