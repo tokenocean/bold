@@ -15,7 +15,7 @@
 
     let { artwork } = props;
 
-    const { default_royalty_recipients } = await fetch(`/royalties.json`).then(
+    let { default_royalty_recipients } = await fetch(`/royalties.json`).then(
       (r) => r.json()
     );
 
@@ -207,6 +207,7 @@
     if (stale) tx = $psbt.extractTransaction();
     await requirePassword();
 
+    console.log("TEST");
     $psbt = await createSwap(
       artwork,
       sats(artwork.asking_asset, list_price),

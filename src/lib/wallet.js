@@ -751,22 +751,6 @@ export const executeSwap = async (artwork) => {
     value: 1,
   });
 
-  if (artist_id !== owner_id && has_royalty) {
-    for (let i = 0; i < royalty_recipients.length; i++) {
-      const element = royalty_recipients[i];
-
-      const recipientValue = Math.round((list_price * element.amount) / 100);
-      total += recipientValue;
-
-      p.addOutput({
-        asset: asking_asset,
-        value: recipientValue,
-        nonce,
-        script: Address.toOutputScript(element.address, network),
-      });
-    }
-  }
-
   let p2 = Psbt.fromBase64(p.toBase64());
 
   let construct = async (p, total) => {
@@ -969,19 +953,39 @@ export const createRelease = async ({ asset, owner }, tx) => {
 };
 
 export const createSwap = async (artwork, amount, tx) => {
-  let { asset, asking_asset } = artwork;
+  let { asset, asking_asset, royalty_recipients } = artwork;
 
-  if (asking_asset === btc && amount < DUST)
-    throw new Error(
-      `Minimum asking price is ${(DUST / 100000000).toFixed(8)} L-BTC`
-    );
+  let p = new Psbt();
+  let outputs = [];
+  let total = amount;
 
-  let p = new Psbt().addOutput({
-    asset: asking_asset,
-    nonce,
-    script: singlesig().output,
-    value: amount,
-  });
+  for (let i = 0; i < royalty_recipients.length; i++) {
+    let royalty = royalty_recipients[i];
+
+    let value = Math.round((parseInt(total) * royalty.amount) / 100);
+
+    if (value > DUST) {
+      amount -= value;
+
+      outputs.push({
+        asset: asking_asset,
+        nonce,
+        script: Address.toOutputScript(royalty.address, network),
+        value,
+      });
+    }
+  }
+
+  if (asking_asset !== btc || amount > DUST) {
+    p.addOutput({
+      asset: asking_asset,
+      nonce,
+      script: singlesig().output,
+      value: amount,
+    });
+  }
+
+  outputs.map((output) => p.addOutput(output));
 
   if (tx) {
     let index = tx.outs.findIndex((o) => parseAsset(o.asset) === asset);
@@ -1049,6 +1053,8 @@ export const createOffer = async (artwork, amount, input, f = 150) => {
     if (artist_id !== owner_id) {
       for (let i = 0; i < royalty_recipients.length; i++) {
         const element = royalty_recipients[i];
+
+        console.log("ELEMENT", element);
 
         const recipientValue = Math.round(
           (parseInt(amount) * element.amount) / 100
@@ -1123,6 +1129,7 @@ export const createOffer = async (artwork, amount, input, f = 150) => {
     return p2;
   }
 };
+
 
 export const sendToMultisig = async (artwork) => {
   let out = singlesig();

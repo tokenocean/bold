@@ -46,6 +46,7 @@ services:
       - ${DATA_DIR}:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    command: ["postgres", "-c", "log_statement=all"]
   hasura:
     logging:
       options:
