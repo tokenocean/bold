@@ -35,7 +35,6 @@
 
   export let id;
   export let subject;
-  export let messages;
 
   $: pageChange($page);
 

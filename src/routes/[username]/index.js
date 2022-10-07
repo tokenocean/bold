@@ -14,7 +14,6 @@ export async function GET({
     return {
       body: {
         subject: users[0],
-        messages,
       },
       headers,
     };

@@ -3,7 +3,6 @@
   import branding from "$lib/branding";
   import { Avatar, Search } from "$comp";
   import { unreadMessages, user } from "$lib/store";
-  import { session } from "$app/stores";
 
   export let open = false;
   let toggle = () => (open = !open);

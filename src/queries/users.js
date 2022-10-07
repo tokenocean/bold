@@ -28,27 +28,6 @@ export const getUsers = `query {
     address
     multisig
     avatar_url
-    pubkey
-  }
-}`;
-
-export const getUserByAddress = `query($address: String!) {
-  users(where: { _or: [{ address: { _eq: $address }}, { multisig: { _eq: $address }}] }, limit: 1) {
-      id
-      address
-      multisig
-      username
-      avatar_url
-      pubkey
-  }
-}`;
-
-export const getUsers = `query {
-  users {
-    username
-    address
-    multisig
-    avatar_url
   }
 }`;
 

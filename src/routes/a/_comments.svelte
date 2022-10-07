@@ -27,7 +27,7 @@
     await requirePassword();
     loading = true;
     try {
-      if (artwork.owner.id !== $session.user.id) {
+      if (artwork.owner.id !== $user.id) {
         await pay(undefined, artwork.owner.address, amount);
         await sign();
         await broadcast();
