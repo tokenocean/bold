@@ -7,6 +7,7 @@
     faHeadphones,
   } from "@fortawesome/free-solid-svg-icons";
   import { loaded } from "$lib/store";
+  import { CID } from "multiformats/cid";
 
   export let artwork;
   export let showDetails;
@@ -17,6 +18,7 @@
   export let noAudio = false;
 
   let img, vid, aud;
+  $: cid = artwork.filename && CID.parse(artwork.filename).toV1().toString();
   $: path =
     artwork &&
     (thumb
@@ -102,7 +104,7 @@
   };
 </script>
 
-{#if artwork.filetype && artwork.filetype.includes("video")}
+{#if artwork.filetype && (artwork.filetype.includes("video") || (thumb && artwork.filetype.includes("gif")))}
   <div
     class="w-full"
     class:inline-block={!popup}
@@ -158,7 +160,7 @@
   <div class="w-full" class:cover class:contain>
     <img
       class={`${classes}`}
-      src={preview || path ? path : "/liquid_logo.svg"}
+      src={preview || (path ? path : "/liquid_logo.svg")}
       alt={artwork.title}
       bind:this={img}
     />

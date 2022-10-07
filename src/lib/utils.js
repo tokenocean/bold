@@ -8,24 +8,28 @@ import {
   full,
   prompt,
   snack,
+  user,
+  bitcoinUnitLocal,
 } from "$lib/store";
 import { goto as svelteGoto } from "$app/navigation";
 import { AcceptPrompt, InsufficientFunds } from "$comp";
 import { isWithinInterval, parseISO, compareAsc } from "date-fns";
 import { query } from "$lib/api";
-import { getArtworkByAsset } from "$queries/artworks.js";
-import { getUserByAddress } from "$queries/users.js";
+import { getArtworkByAsset } from "$queries/artworks";
+import { getUserByAddress, updateUser } from "$queries/users";
+import * as browserifyCipher from "browserify-cipher";
+import * as nobleSecp256k1 from "@noble/secp256k1";
+import { browser } from "$app/env";
+import { fromBase58 } from "bip32";
+import { network } from "$lib/wallet";
 
 export const btc = import.meta.env.VITE_BTC;
 export const cad = import.meta.env.VITE_CAD;
 export const usd = import.meta.env.VITE_USD;
 export const host = import.meta.env.VITE_HOST;
 export const label = ({ asset, name }, field = "ticker") =>
-  name || (asset
-    ? tickers[asset]
-      ? tickers[asset][field]
-      : asset.substr(0, 5)
-    : "");
+  name ||
+  (asset ? (tickers[asset] ? tickers[asset][field] : asset.substr(0, 5)) : "");
 
 export const sleep = (n) => new Promise((r) => setTimeout(r, n));
 
@@ -67,12 +71,10 @@ export const addressUser = async (address) => {
 
 export const addressLabel = async (address) => {
   const { users } = await query(getUserByAddress, { address });
-  if (users.length) {
-    let user = users[0];
-    return user.address === address ? user.username : user.username + " 2of2";
-  }
-
-  return address.length > 6 ? address.substr(0, 6) + "..." : address;
+  if (users.length) return users[0].username;
+  return address.length > 6
+    ? address.slice(0, 3) + ".." + address.slice(-3)
+    : address;
 };
 
 export const assetLabel = async (asset) => {
@@ -287,11 +289,12 @@ function post(endpoint, data) {
 export const underway = ({ auction_start: s, auction_end: e }) =>
   e && isWithinInterval(new Date(), { start: parseISO(s), end: parseISO(e) });
 
-export const canCancel = ({ artwork, created_at, type, user: { id } }, user) => {
+export const canCancel = (
+  { artwork, created_at, type, user: { id } },
+  user
+) => {
   return (
-    type === "bid" &&
-    isCurrent(artwork, created_at, type) &&
-    user?.id === id
+    type === "bid" && isCurrent(artwork, created_at, type) && user?.id === id
   );
 };
 
@@ -312,4 +315,128 @@ export const canAccept = ({ type, artwork, created_at, accepted }, user) => {
     isOwner(artwork) &&
     !underway(artwork)
   );
+};
+
+export function encrypt(privkey, pubkey, text) {
+  pubkey = fromBase58(pubkey, network).publicKey.toString("hex").substring(2);
+
+  var key = Buffer.from(
+    nobleSecp256k1.getSharedSecret(privkey, "02" + pubkey, true)
+  )
+    .toString("hex")
+    .substring(2);
+
+  var iv = window.crypto.getRandomValues(new Uint8Array(16));
+  var cipher = browserifyCipher.createCipheriv(
+    "aes-256-cbc",
+    Buffer.from(key, "hex"),
+    iv
+  );
+  var encryptedMessage = cipher.update(text, "utf8", "base64");
+  let emsg = encryptedMessage + cipher.final("base64");
+
+  return emsg + "?iv=" + Buffer.from(iv.buffer).toString("base64");
+}
+
+export function decrypt(privkey, pubkey, ciphertext) {
+  pubkey = fromBase58(pubkey, network).publicKey.toString("hex").substring(2);
+  var [emsg, iv] = ciphertext.split("?iv=");
+  var key = Buffer.from(
+    nobleSecp256k1.getSharedSecret(privkey, "02" + pubkey, true)
+  )
+    .toString("hex")
+    .substring(2);
+
+  var decipher = browserifyCipher.createDecipheriv(
+    "aes-256-cbc",
+    Buffer.from(key, "hex"),
+    Buffer.from(iv, "base64")
+  );
+  var decryptedMessage = decipher.update(emsg, "base64");
+  let dmsg = decryptedMessage + decipher.final("utf8");
+
+  return dmsg;
+}
+
+export const updateBitcoinUnit = async (unit) => {
+  try {
+    let currentUser = get(user);
+
+    if (currentUser) {
+      const id = currentUser.id;
+      const setUnit = { bitcoin_unit: unit };
+
+      bitcoinUnitLocal.set(unit);
+      await query(updateUser, { user: setUnit, id });
+    } else {
+      browser && window.localStorage.setItem("unit", unit);
+      bitcoinUnitLocal.set(unit);
+    }
+  } catch (e) {
+    err(e);
+  }
+};
+
+export const updateFiats = async (fiat, action) => {
+  try {
+    let currentUser = get(user);
+
+    if (currentUser) {
+      const id = currentUser.id;
+      let fiats = JSON.parse(currentUser.fiats);
+      if (action === "add") {
+        fiats.push(fiat);
+      } else if (action === "remove") {
+        if (fiats.length <= 1)
+          return err("Must have at least one fiat currency selected");
+        const currentIndex = fiats.indexOf(currentUser.fiat);
+        if (currentUser.fiat === fiat) {
+          currentUser.fiat =
+            currentIndex === fiats.length - 1
+              ? fiats[0]
+              : fiats[currentIndex + 1];
+        }
+        fiats = fiats.filter((value) => value !== fiat);
+      }
+      const setFiats = { fiats: JSON.stringify(fiats), fiat: currentUser.fiat };
+      currentUser.fiats = JSON.stringify(fiats);
+      user.set(currentUser);
+      await query(updateUser, { user: setFiats, id });
+      if (action === "remove") {
+        info("Fiat currency removed");
+      } else if (action === "add") {
+        info("Fiat currency added");
+      }
+    }
+  } catch (e) {
+    err(e);
+  }
+};
+
+export const updateFiat = async () => {
+  try {
+    let currentUser = get(user);
+    const fiats = JSON.parse(currentUser.fiats);
+    if (currentUser && fiats.length > 1) {
+      const id = currentUser.id;
+
+      const currentIndex = fiats.indexOf(currentUser.fiat);
+
+      currentUser.fiat =
+        currentIndex === fiats.length - 1 ? fiats[0] : fiats[currentIndex + 1];
+
+      const setFiat = { fiat: currentUser.fiat };
+      user.set(currentUser);
+
+      await query(updateUser, { user: setFiat, id });
+    } else {
+      return;
+    }
+  } catch (e) {
+    err(e);
+  }
+};
+
+export const satsFormatted = (amount) => {
+  return new Intl.NumberFormat().format(amount);
 };

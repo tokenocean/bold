@@ -1,7 +1,7 @@
 import { session } from "$app/stores";
 import { tick } from "svelte";
 import { get } from "svelte/store";
-import { api, electrs, hasura, query } from "$lib/api";
+import { newapi as api, electrs, hasura, query } from "$lib/api";
 import * as middlewares from "wretch-middlewares";
 import { mnemonicToSeedSync } from "bip39";
 import { fromBase58, fromSeed } from "bip32";
@@ -16,21 +16,22 @@ import {
 
 import reverse from "buffer-reverse";
 import {
-  balances,
+  assets,
+  confirmed,
   fee,
   locked,
-  pending,
   password,
-  snack,
   poll,
+  prompt,
   psbt,
   sighash,
-  txcache,
-  transactions,
   signStatus,
-  prompt,
-  user,
+  snack,
   token,
+  transactions,
+  txcache,
+  unconfirmed,
+  user,
 } from "$lib/store";
 import cryptojs from "crypto-js";
 import { btc, info } from "$lib/utils";
@@ -41,14 +42,14 @@ import { compareAsc, parseISO } from "date-fns";
 import { SignaturePrompt, AcceptPrompt } from "$comp";
 import createHash from "create-hash";
 
+const { retry } = middlewares.default || middlewares;
+
 function sha256(buffer) {
   return createHash("sha256").update(buffer).digest();
 }
 
 export const CANCELLED = "cancelled";
 export const ACCEPTED = "accepted";
-
-const { retry } = middlewares.default || middlewares;
 
 export const DUST = 800;
 const satsPerByte = 0.15;
@@ -66,30 +67,23 @@ export const parseAsset = (v) => reverse(v.slice(1)).toString("hex");
 
 const nonce = Buffer.alloc(1);
 
-export const getBalances = async () => {
-  await requirePassword();
-
-  let { confirmed: c, pending: p } = await api
-    .auth(`Bearer ${get(token)}`)
-    .url("/balance")
+export const getBalance = async (asset) => {
+  let { confirmed: c, unconfirmed: u } = await api()
+    .url(`/${asset}/balance`)
     .get()
     .json();
 
-  // Object.keys(c).map(async (a) => {
-  //   let { artworks } = await query(getArtworkByAsset, { asset: a });
-  //   let artwork = artworks[0];
+  let nc = { ...get(confirmed) };
+  let nu = { ...get(unconfirmed) };
+  nc[asset] = c[asset];
+  nu[asset] = u[asset];
 
-  //   if (artwork.owner_id !== user.id) {
-  //     await api.auth(`Bearer ${jwt}`).url("/claim").post({ artwork }).json();
-  //   }
-  // });
-
-  balances.set(c);
-  pending.set(p);
+  confirmed.set(nc);
+  unconfirmed.set(nu);
 };
 
-const getHex = async (txid) => {
-  return electrs.url(`/tx/${txid}/hex`).get().text();
+export const getHex = async (txid) => {
+  return api().url(`/tx/${txid}/hex`).get().text();
 };
 
 export const getTx = async (txid) => {
@@ -398,7 +392,7 @@ const fund = async (
 ) => {
   let { address, redeem, output } = out;
 
-  let utxos = await api.url(`/address/${address}/utxo`).get().json();
+  let utxos = await api().url(`/address/${address}/${asset}/utxo`).get().json();
   let l = (await getLocked(asset))
     .filter((t) => !(p.artwork_id && t.artwork.id === p.artwork_id))
     .map((t) => {
@@ -695,7 +689,7 @@ export const broadcast = async (disableRetries = false) => {
 
   if (disableRetries) middlewares = [];
 
-  return electrs.url("/tx").middlewares(middlewares).body(hex).post().text();
+  return api().url("/broadcast").post({ hex }).json();
 };
 
 export const signAndBroadcast = async () => {
@@ -835,7 +829,7 @@ export const createIssuance = async (
 };
 
 export const getInputs = async () => {
-  let utxos = await api
+  let utxos = await api()
     .url(`/address/${singlesig().address}/utxo`)
     .get()
     .json();
@@ -1134,9 +1128,8 @@ export const sendToMultisig = async (artwork) => {
 };
 
 export const requestSignature = async (psbt) => {
-  let { base64 } = await api
+  let { base64 } = await api()
     .url("/sign")
-    .headers({ authorization: `Bearer ${get(token)}` })
     .post({ psbt: psbt.toBase64() })
     .json();
   return Psbt.fromBase64(base64);

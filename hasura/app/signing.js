@@ -1,45 +1,10 @@
+import { q } from "./api.js";
 import { keypair, parse, sign } from "./wallet.js";
 import { parseISO, isWithinInterval } from "date-fns";
 import { address as Address } from "liquidjs-lib";
 import { app } from "./app.js";
 import { auth } from "./auth.js";
-import { q } from "./api.js";
-
-const getArtworks = `
-  query($assets: [String!]) {
-    artworks(where: { asset: { _in: $assets }}) {
-      id 
-      asset
-      asking_asset
-      has_royalty
-      royalty_recipients {
-        id
-        asking_asset
-        amount
-        address
-        name
-      }
-      auction_start
-      auction_end
-      list_price
-      artist {
-        id
-        address
-        multisig
-      } 
-      owner {
-        id
-        address
-        multisig
-      } 
-    } 
-  }`;
-
-const allMultisig = `query {
-  users {
-    multisig
-  } 
-}`;
+import { getArtworks, allMultisig } from "./queries.js";
 
 app.get("/pubkey", async (req, res) => {
   const { pubkey } = keypair();
@@ -130,14 +95,13 @@ export const check = async (psbt) => {
           let amountDue = 0;
 
           for (let i = 0; i < royalty_recipients.length; i++) {
-            const royalty = royalty_recipients[i];
-            amountDue += Math.round(
-              (list_price * royalty.amount) / 100
-            );
+            const element = royalty_recipients[i];
+
+            amountDue += Math.round((toOwner * element.amount) / 100);
           }
-          
-          if (toRoyaltyRecipients < amountDue)
-            throw new Error("Royalties not paid");
+
+          if (toRoyaltyRecipients < amountDue && artist.id !== owner.id)
+            throw new Error("Royalty not paid");
         }
 
         if (

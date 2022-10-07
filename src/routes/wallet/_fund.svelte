@@ -1,5 +1,4 @@
 <script>
-  import { session } from "$app/stores";
   import Fa from "svelte-fa";
   import {
     faUserSecret,
@@ -8,15 +7,15 @@
     faTimes,
   } from "@fortawesome/free-solid-svg-icons";
   import { faClone } from "@fortawesome/free-solid-svg-icons";
-  import qrcode from "qrcode-generator-es6";
-  import { asset, token } from "$lib/store";
+  import qrcode from "qrcode";
+  import { user } from "$lib/store";
   import { btc, copy, err } from "$lib/utils";
-  import { api } from "$lib/api";
+  import { newapi as api } from "$lib/api";
   import { ProgressLinear } from "$comp";
 
+  export let asset;
   export let funding = false;
 
-  let img;
   let tab = "liquid";
 
   let showInvoice = false;
@@ -28,18 +27,16 @@
   let toggleConfidential = () => {
     confidential = !confidential;
     if (confidential) liquid();
-    else address = $session.user.address;
+    else address = $user.address;
   };
 
   $: updateAddress(address);
 
-  let updateAddress = (address) => {
+  let qr;
+  let updateAddress = async (address) => {
     if (!address) return;
-    const qr = new qrcode(0, "H");
     if (address.startsWith("bc")) address = `bitcoin:${address}`;
-    qr.addData(address);
-    qr.make();
-    img = qr.createSvgTag({});
+    qr = await qrcode.toDataURL(address);
   };
 
   let fee = 0;
@@ -50,12 +47,11 @@
     loading = true;
     explainer = true;
     try {
-      ({ address, fee } = await api
+      ({ address, fee } = await api()
         .url("/bitcoin")
-        .auth(`Bearer ${$token}`)
         .post({
           amount: 10000,
-          liquidAddress: $session.user.address,
+          liquidAddress: $user.address,
         })
         .json());
     } catch (e) {
@@ -69,7 +65,7 @@
     fee = 0;
 
     if (!confidential) {
-      address = $session.user.address;
+      address = $user.address;
       explainer = false;
       return;
     }
@@ -78,12 +74,11 @@
 
     loading = true;
     try {
-      ({ address, fee } = await api
+      ({ address, fee } = await api()
         .url("/liquid")
-        .auth(`Bearer ${$token}`)
         .post({
           amount: 10000,
-          liquidAddress: $session.user.address,
+          liquidAddress: $user.address,
         })
         .json());
     } catch (e) {
@@ -98,12 +93,11 @@
     loading = true;
     explainer = true;
     try {
-      ({ address, fee } = await api
+      ({ address, fee } = await api()
         .url("/lightning")
-        .auth(`Bearer ${$token}`)
         .post({
           amount: 10000,
-          liquidAddress: $session.user.address,
+          liquidAddress: $user.address,
         })
         .json());
     } catch (e) {
@@ -114,17 +108,10 @@
   };
 
   let address;
-  $: if ($session.user) address = $session.user.address;
-
-  $: if ($session.user && $session.user.address) {
-    const qr = new qrcode(0, "H");
-    qr.addData($session.user.address);
-    qr.make();
-    img = qr.createSvgTag({});
-  }
+  $: if ($user) address = $user.address;
 </script>
 
-{#if $session.user && funding}
+{#if $user && funding}
   <div class="dark-bg mb-2 md:rounded-lg p-5">
     <div class="flex justify-between place-items-center text-gray-400">
       <p>Fund Wallet</p>
@@ -162,7 +149,7 @@
       </p>
     {/if}
 
-    {#if $asset.asset === btc}
+    {#if asset === btc}
       <div
         class="flex justify-center text-center cursor-pointer tabs flex-wrap mb-2"
       >
@@ -181,7 +168,7 @@
       <div class="mb-2 flex justify-center flex-col">
         <div class="flex mb-2">
           <div class="mx-auto w-1/2 qr mt-6 mb-3">
-            {@html img}
+            <img src={qr} class="w-full" alt="QR Code" />
           </div>
         </div>
         <div class="flex">

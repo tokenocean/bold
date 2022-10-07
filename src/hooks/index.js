@@ -21,7 +21,7 @@ export async function handle({ event, resolve }) {
     decode(jwt);
   } catch (e) {
     try {
-      if (!pathname.includes(".json") && refresh_token) {
+      if (refresh_token) {
         let res = await hbp
           .headers({ cookie: `refresh_token=${refresh_token}` })
           .url("/auth/token/refresh")
@@ -56,7 +56,7 @@ export async function handle({ event, resolve }) {
     }
   }
 
-  let q = getQ({ authorization: `Bearer ${jwt}` });
+  let q = jwt ? getQ({ authorization: `Bearer ${jwt}` }) : getQ();
   event.locals = { jwt, q };
 
   if (jwt) {

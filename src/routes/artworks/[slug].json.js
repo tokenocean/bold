@@ -5,9 +5,8 @@ import {
   getArtworkBySlug,
 } from "$queries/artworks";
 import { getArtworkTransactions } from "$queries/transactions";
-import { hbp } from "$lib/api";
 
-export async function get({ request: { headers }, locals, params }) {
+export async function GET({ request: { headers }, locals, params }) {
   try {
     let { slug } = params;
     let { q } = locals;

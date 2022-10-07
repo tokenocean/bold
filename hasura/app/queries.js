@@ -209,6 +209,14 @@ export const getUser = `query get_user_by_pk($id: uuid!) {
   }
 }`;
 
+export const getUserByTicket = `query ($ticket: uuid!) {
+  auth_accounts(where: { ticket: { _eq: $ticket }}) {
+    user {
+      id
+    } 
+  }
+}`;
+
 export const getAvatars = `query { users { id, avatar_url }}`;
 
 export const getActiveBids = `query {
@@ -245,6 +253,12 @@ export const cancelListing = `mutation ($id: uuid!, $artwork_id: uuid!) {
   ) {
    id
   }
+}`;
+
+export const getListing = `query($id: uuid!) {
+  activelistings(where: { artwork_id: { _eq: $id }}) {
+    id
+  } 
 }`;
 
 export const getUnconfirmed = `query {
@@ -312,6 +326,25 @@ export const getLastTransactionsForAddress = `query($address: String!) {
     asset
     address
     user_id
+  }
+}`;
+
+export const getTransactionsByTxid = `query($txids: [String!], $asset: String!) {
+  transactions(
+    where: {
+      hash: {_in: $txids},
+      asset: {_eq: $asset},
+    },
+  ) {
+    id
+    hash
+    amount
+    created_at
+    asset
+    type
+    user_id
+    address
+    confirmed
   }
 }`;
 
@@ -396,10 +429,15 @@ export const getArtworkWithBidTransactionByHash = `query getArtworkWithBidTransa
 export const getArtwork = `query($id: uuid!) {
   artworks_by_pk(id: $id) {
     id
+    artist_id
+    artist {
+      bitcoin_unit
+    } 
     owner {
       address
       multisig
     }
+    list_price_tx
     owner_id
     asset
     title
@@ -459,6 +497,15 @@ export const createComment = `mutation($comment: comments_insert_input!) {
 
 export const getUserByEmail = `query($email: String!) {
   users(where: {_or: [{display_name: {_eq: $email}}, {username: {_eq: $email }}]}, limit: 1) {
+    display_name
+  }
+}`;
+
+export const getUserByUsername = `query($username: String!) {
+  users(where: {_or: [{display_name: {_eq: $username}}, {username: {_eq: $username }}]}, limit: 1) {
+    id
+    address
+    multisig
     display_name
   }
 }`;
@@ -525,6 +572,7 @@ export const getFinishedAuctions = `query($now: timestamptz!) {
     reserve_price
     asking_asset
     has_royalty
+    auction_start
     auction_end
     transferred_at
     list_price_tx
@@ -557,3 +605,40 @@ export const updateMessages = `mutation($message: messages_set_input!, $from: uu
     affected_rows
   }
 }`;
+
+export const getArtworks = `
+  query($assets: [String!]) {
+    artworks(where: { asset: { _in: $assets }}) {
+      id 
+      asset
+      asking_asset
+      has_royalty
+      royalty_recipients {
+        id
+        asking_asset
+        amount
+        address
+        name
+      }
+      auction_start
+      auction_end
+      list_price
+      artist {
+        id
+        address
+        multisig
+      } 
+      owner {
+        id
+        address
+        multisig
+      } 
+    } 
+  }`;
+
+export const allMultisig = `query {
+  users {
+    multisig
+  } 
+}`;
+

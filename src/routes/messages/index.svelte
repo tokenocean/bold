@@ -1,57 +1,104 @@
 <script>
-  import { token } from "$lib/store";
-
+  import * as nobleSecp256k1 from "@noble/secp256k1";
+  import { fromBase58 } from "bip32";
+  import { keypair, network } from "$lib/wallet";
+  import { user, unreadMessages, storeMessages } from "$lib/store";
+  import { encrypt, decrypt } from "$lib/utils";
   import Fa from "svelte-fa";
-  import { tick } from "svelte";
+  import { onMount, onDestroy, tick } from "svelte";
   import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-  import { session } from "$app/stores";
   import { createMessage, updateMessage } from "$queries/messages";
-  import { api, query } from "$lib/api";
+  import { newapi as api, query } from "$lib/api";
+  import { requirePassword } from "$lib/auth";
 
-  export let messages;
+  let messageWindow;
+  let ownPrivKey;
+  let ownPubKey;
+
+  onMount(async () => {
+    await requirePassword();
+    ownPrivKey = keypair().privkey.toString("hex");
+    ownPubKey = keypair().pubkey.toString("hex").substring(2);
+  });
+
+  onDestroy(() => {
+    clearInterval(readMessagesInterval);
+  });
 
   let uniq = (a, k) => [...new Map(a.map((x) => [k(x), x])).values()];
-  let users = uniq(
-    messages.map(({ fromUser: { username, avatar_url, id } }) => ({
-      username,
-      avatar_url,
-      id,
-    })),
-    (m) => m.username
-  );
 
-  users = users.filter((user) => user.username !== $session.user.username);
+  $: users = uniq(
+    [
+      ...$storeMessages.map(
+        ({ fromUser: { username, avatar_url, id, pubkey } }) => ({
+          username,
+          avatar_url,
+          id,
+          pubkey,
+        })
+      ),
+      ...$storeMessages.map(
+        ({ toUser: { username, avatar_url, id, pubkey } }) => ({
+          username,
+          avatar_url,
+          id,
+          pubkey,
+        })
+      ),
+    ],
+    (m) => m.username
+  ).filter((u) => u.username !== $user.username);
 
   let selectedUser;
   let sendMessage;
+  let readMessagesInterval;
 
   async function onSubmit() {
+    let encryptedMessage = encrypt(
+      ownPrivKey,
+      selectedUser.pubkey,
+      sendMessage
+    );
+
     let {
       insert_messages_one: { id },
     } = await query(createMessage, {
       message: {
-        message: sendMessage,
+        message: encryptedMessage,
         to: selectedUser.id,
       },
     });
 
-    messages.push({
-      message: sendMessage,
+    await api().url("/mail-message-received").post({
+      userId: selectedUser.id,
+    });
+
+    $storeMessages.push({
+      message: encryptedMessage,
       created_at: Date.now(),
-      from: $session.user.id,
+      from: $user.id,
       to: selectedUser.id,
       id: id,
-      user: {
-        avatar_url: selectedUser.avatar,
+      viewed: true,
+      toUser: {
+        avatar_url: selectedUser.avatar_url,
         id: selectedUser.id,
         username: selectedUser.username,
+        pubkey: selectedUser.pubkey,
+      },
+      fromUser: {
+        avatar_url: $user.avatar_url,
+        id: $user.id,
+        username: $user.username,
+        pubkey: $user.pubkey,
       },
     });
 
-    messages = [...messages];
+    $storeMessages = [...$storeMessages];
     sendMessage = "";
+
     await tick();
-    getFocus();
+    scrollDown();
   }
 
   function timestamp(data) {
@@ -59,24 +106,43 @@
     return time.toLocaleDateString();
   }
 
-  let bottom;
-  function getFocus() {
-    bottom.focus({ preventScroll: false });
+  $: scrollDown($storeMessages);
+  async function scrollDown(l) {
+    await tick();
+    if (messageWindow) messageWindow.scrollTop = messageWindow.scrollHeight;
   }
 
-  async function handleSelection(user) {
-    messages.forEach((message) => {
+  const setReadMessages = async (user) => {
+    $storeMessages.forEach((message) => {
       if (message.from === user.id && message.viewed === false) {
         message.viewed = true;
       }
     });
 
+    $unreadMessages.forEach((message) => {
+      if (message.from === user.id) {
+        message.viewed = true;
+      }
+    });
+
+    $unreadMessages = $unreadMessages.filter(
+      (message) => message.viewed === false
+    );
+
+    api().url("/markRead").post({ from: user.id });
+  };
+
+  async function handleSelection(user) {
     selectedUser = user;
 
-    await tick();
-    getFocus();
+    selectedUser.pubkeyFormatted = fromBase58(user.pubkey, network)
+      .publicKey.toString("hex")
+      .substring(2);
 
-    api.auth(`Bearer ${$token}`).url("/markRead").post({ from: user.id });
+    setReadMessages(user);
+    readMessagesInterval = setInterval(() => setReadMessages(user), 1000);
+
+    scrollDown();
   }
 
   const messagesSort = (messageA, messageB) => {
@@ -91,10 +157,8 @@
     return 0;
   };
 
-  const unreadMessages = (user) => {
-    return messages.filter(
-      (message) => message.from === user.id && message.viewed === false
-    );
+  const unreadMessagesFromUser = (user) => {
+    return $unreadMessages.filter((message) => message.from === user.id);
   };
 </script>
 
@@ -104,7 +168,7 @@
 
     <div class="border p-10 w-full rounded-lg space-y-4 dark-bg">
       {#if selectedUser === undefined}
-        <a href={`/${$session.user.username}`} class="text-[#30bfad]">
+        <a href={`/${$user.username}`} class="text-[#30bfad]">
           <div class="flex">
             <Fa icon={faChevronLeft} class="my-auto mr-1" />
             <div>Back to profile</div>
@@ -123,15 +187,15 @@
                 class="w-10 h-10 rounded-full"
               />
               <p>{user.username}</p>
-              {#if unreadMessages(user).length > 0}
+              {#if unreadMessagesFromUser(user).length > 0}
                 <p>
-                  ({unreadMessages(user).length})
+                  ({unreadMessagesFromUser(user).length})
                 </p>
               {/if}
             </button>
           </div>
         {/each}
-        {#if messages.length === 0}
+        {#if $storeMessages.length === 0}
           <p class="text-center">No messages yet.</p>
         {/if}
       {:else}
@@ -151,7 +215,10 @@
           </div>
           <button
             class="text-[#30bfad]"
-            on:click={() => (selectedUser = undefined)}
+            on:click={() => {
+              selectedUser = undefined;
+              clearInterval(readMessagesInterval);
+            }}
           >
             <div class="flex">
               <Fa icon={faChevronLeft} class="my-auto mr-1" />
@@ -161,8 +228,9 @@
         </div>
         <div
           class="bg-[#31373e] border border-white/50 space-y-4 w-full py-4 px-5 md:px-10 rounded-lg max-h-96 overflow-auto"
+          bind:this={messageWindow}
         >
-          {#each messages
+          {#each $storeMessages
             .filter((message) => message.from === selectedUser.id || message.to === selectedUser.id)
             .sort(messagesSort) as message}
             <div
@@ -176,7 +244,13 @@
                   : 'bg-primary text-black'}"
               >
                 <p class="break-all">
-                  {message.message}
+                  {decrypt(
+                    ownPrivKey,
+                    message.from === selectedUser.id
+                      ? message.fromUser.pubkey
+                      : message.toUser.pubkey,
+                    message.message
+                  )}
                 </p>
                 <p class="text-xs text-gray-400 text-right">
                   {timestamp(message.created_at)}
@@ -184,7 +258,6 @@
               </div>
             </div>
           {/each}
-          <a href="" bind:this={bottom} />
         </div>
         <form on:submit|preventDefault={onSubmit}>
           <textarea

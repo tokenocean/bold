@@ -1,49 +1,89 @@
 <script>
-  export let artworks;
-  export let offset;
-  export let hidden;
+  import { offset } from "$lib/store";
+  import { onMount } from "svelte";
+  import Fa from "svelte-fa";
+  import {
+    faChevronLeft,
+    faChevronRight,
+  } from "@fortawesome/free-solid-svg-icons";
+  export let loadMore, total;
+  let pageSize = 21;
+  let current = 0;
+  let buttonLength = 5;
 
-  let jump = async (i) => {
-    document.getElementById(`artwork-${i * offset}`).scrollIntoView();
+  $: pages = total > 0 ? [...Array(Math.ceil(total / pageSize)).keys()] : [];
+
+  $: start =
+    current >= pages.length - buttonLength
+      ? pages.length - buttonLength
+      : Math.max(0, current - 2);
+  $: slice = pages.slice(start, start + buttonLength);
+
+  let load = (page) => {
+    current = page;
+    $offset = page * pageSize;
+    loadMore();
   };
-
-  $: pages = [...Array(Math.ceil(artworks.length / offset)).keys()];
-  let y;
-  /*
-  $: current = pages.findIndex((_, i) => {
-    return (
-      i === pages.length - 1 ||
-      (i === 0 &&
-        document.getElementById(`artwork-${offset}`) &&
-        y < document.getElementById(`artwork-${offset}`).offsetTop) ||
-      (document.getElementById(`artwork-${i * offset}`) &&
-        y >= document.getElementById(`artwork-${i * offset}`).offsetTop &&
-        y < document.getElementById(`artwork-${(i + 1) * offset}`).offsetTop)
-    );
-  });
-   */
-  $: current = 0;
 </script>
 
-<svelte:window bind:scrollY={y} />
-
-{#if artworks && offset}
-  <div class="fixed full-width bottom-0 flex bg-white p-4 mx-auto" class:hidden>
-    <div class="mx-auto">
-      {#each pages as _, i}
+<div class="full-width flex bg-white p-4 mx-auto">
+  <div class="mx-auto">
+    <div class="container flex mb-2">
+      <i
+        class="icon w-12 h-12"
+        class:font-bold={current}
+        on:click={() => load(0)}
+      >
+        <Fa icon={faChevronLeft} />
+        <Fa icon={faChevronLeft} />
+      </i>
+      <i
+        class="icon w-12 h-12"
+        class:font-bold={current}
+        on:click={() => current > 0 && load(current - 1)}
+      >
+        <Fa icon={faChevronLeft} />
+      </i>
+      {#each slice as p}
         <button
           class="rounded-full w-12 h-12"
-          class:font-bold={i === current}
-          on:click={() => jump(i)}>{i + 1}</button
+          class:font-bold={p === current}
+          on:click={() => load(p)}>{p + 1}</button
         >
       {/each}
+      <i
+        class="icon w-12 h-12"
+        class:font-bold={current}
+        on:click={() => current < pages.length - 1 && load(current + 1)}
+      >
+        <Fa icon={faChevronRight} />
+      </i>
+      <i
+        class="icon w-12 h-12"
+        class:font-bold={current}
+        on:click={() => load(pages.length - 1)}
+      >
+        <Fa icon={faChevronRight} />
+        <Fa icon={faChevronRight} />
+      </i>
     </div>
   </div>
-{/if}
+</div>
 
 <style>
-  .full-width {
-    width: 100%;
-    left: calc(100vw - 100%);
+  button {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 3px;
+  }
+
+  .icon {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
   }
 </style>

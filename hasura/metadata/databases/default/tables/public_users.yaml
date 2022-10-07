@@ -85,6 +85,20 @@ array_relationships:
         insertion_order: null
         column_mapping:
           id: owner_id
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: from
+        table:
+          schema: public
+          name: messages
+  - name: messagesByTo
+    using:
+      foreign_key_constraint_on:
+        column: to
+        table:
+          schema: public
+          name: messages
   - name: offers
     using:
       manual_configuration:
@@ -146,6 +160,8 @@ select_permissions:
         - blindkey
         - confidential
         - email
+        - fiat
+        - fiats
         - full_name
         - has_samples
         - id
@@ -169,9 +185,12 @@ select_permissions:
         - address
         - avatar_url
         - bio
+        - bitcoin_unit
         - created_at
         - display_name
         - email
+        - fiat
+        - fiats
         - full_name
         - has_samples
         - id
@@ -200,9 +219,12 @@ select_permissions:
         - address
         - avatar_url
         - bio
+        - bitcoin_unit
         - blindkey
         - confidential
         - email
+        - fiat
+        - fiats
         - full_name
         - has_samples
         - id
@@ -225,6 +247,8 @@ update_permissions:
   - role: approver
     permission:
       columns:
+        - fiat
+        - fiats
         - info
         - is_artist
         - prompt_sign
@@ -236,10 +260,13 @@ update_permissions:
         - address
         - avatar_url
         - bio
+        - bitcoin_unit
         - blindkey
         - confidential
         - display_name
         - email
+        - fiat
+        - fiats
         - full_name
         - info
         - instagram

@@ -11,6 +11,8 @@ export const app = import.meta.env.VITE_APP;
 
 const { retry } = middlewares.default || middlewares;
 
+export const host = import.meta.env.VITE_HOST;
+export const app = import.meta.env.VITE_APP;
 export const api = wretch().url(`${host}/api`);
 
 export const newapi = (headers) => {
@@ -18,13 +20,15 @@ export const newapi = (headers) => {
   let jwt = headers && cookie.parse(headers.get("cookie") || "").token;
 
   if (browser) {
-    url = `${host}/api` 
+    url = `${host}/api`;
     jwt = getStore(token);
-  } 
+  }
 
-  return wretch().url(url).auth(jwt ? `Bearer ${jwt}` : undefined);
-} 
-  
+  return wretch()
+    .url(url)
+    .auth(jwt ? `Bearer ${jwt}` : undefined);
+};
+
 export const electrs = wretch().url(`${host}/api/el`);
 
 export const hasura = wretch()
@@ -69,9 +73,9 @@ export const getQ = (defaultHeaders) => {
       let r = await fn(q, v, h);
       return r;
     } catch (e) {
-      if (h.authorization) delete h.authorization;
-      let r = await fn(q, v, h);
-      return r;
+      console.log(e);
     }
   };
 };
+
+export const coinos = wretch().url(import.meta.env.VITE_COINOS);

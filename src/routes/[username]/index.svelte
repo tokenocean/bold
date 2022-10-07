@@ -1,21 +1,37 @@
 <script>
-  import { session } from "$app/stores";
-  import { artworksLimit, prompt, messageUser } from "$lib/store";
+  import {
+    artworksLimit,
+    prompt,
+    messageUser,
+    tipUser,
+    user,
+  } from "$lib/store";
   import Fa from "svelte-fa";
   import {
     faEnvelope,
     faLink,
     faMapMarkerAlt,
+    faWallet,
   } from "@fortawesome/free-solid-svg-icons";
   import { faTwitter, faInstagram } from "@fortawesome/free-brands-svg-icons";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
-  import { err, goto } from "$lib/utils";
-  import { Avatar, Card, Offers, ProgressLinear, SendMessage } from "$comp";
+  import { err, goto, copy } from "$lib/utils";
+  import { fromBase58 } from "bip32";
+  import {
+    Avatar,
+    Card,
+    Offers,
+    ProgressLinear,
+    SendMessage,
+    SendTip,
+  } from "$comp";
   import { createFollow, deleteFollow } from "$queries/follows";
   import { getUserByUsername } from "$queries/users";
   import Menu from "./_menu.svelte";
   import { query } from "$lib/api";
+  import { network } from "$lib/wallet";
+  import qrcode from "qrcode";
 
   export let id;
   export let subject;
@@ -42,7 +58,7 @@
 
   let follow = () => {
     if (subject.followed) {
-      query(deleteFollow($session.user, subject)).catch(err);
+      query(deleteFollow($user, subject)).catch(err);
       subject.followed = false;
       subject.num_followers--;
     } else {
@@ -52,13 +68,24 @@
     }
   };
 
+  let qr, showQr;
+  let toggleQr = () => {
+    showQr = !showQr;
+  };
+
+  onMount(async () => {
+    let address = subject.address;
+    address = `bitcoin:${address}`;
+    qr = await qrcode.toDataURL(address);
+  });
+
   let tab = subject.is_artist ? "creations" : "collection";
 </script>
 
 <div class="container mx-auto lg:px-16 mt-5 md:mt-20">
   {#if subject}
     <div class="flex justify-between flex-wrap">
-      <div class="w-full xl:w-1/3 xl:max-w-xs mb-20">
+      <div class="w-full xl:w-1/3 xl:max-w-xs">
         <div class="w-full flex flex-col">
           <div class="flex items-center">
             <Avatar size="large" user={subject} />
@@ -72,7 +99,45 @@
             <div>Following: {subject.num_follows}</div>
           </div>
         </div>
-        <div class="social-details">
+        {#if $user}
+          {#if $user.id === subject.id}
+            <Menu />
+          {:else}
+            <div class="grid grid-cols-3 gap-2 mb-10">
+              <button
+                class="p-2 primary-btn follow mt-8 w-full"
+                on:click={follow}
+              >
+                {subject.followed ? "Unfollow" : "Follow"}</button
+              >
+              <button
+                class="p-2 primary-btn mt-8 w-full"
+                on:click={() => {
+                  $messageUser = subject;
+                  prompt.set(SendMessage);
+                }}
+              >
+                Message</button
+              >
+              <button
+                class="p-2 primary-btn mt-8 w-full"
+                on:click={() => {
+                  $tipUser = {
+                    username: subject.username,
+                    address: subject.address,
+                  };
+                  prompt.set(SendTip);
+                }}
+              >
+                Tip</button
+              >
+            </div>
+          {/if}
+        {/if}
+        {#if subject.bio}
+          <p class="my-4">{subject.bio}</p>
+        {/if}
+        <div class="social-details mt-4">
           {#if subject.instagram}
             <a href={`https://instagram.com/${subject.instagram}`}>
               <div class="flex">
@@ -114,38 +179,32 @@
             </a>
           {/if}
           {#if subject.location}
-            <a href=".">
-              <div class="flex">
-                <div class="my-auto">
-                  <Fa icon={faMapMarkerAlt} />
-                </div>
-                <div><span>{subject.location}</span></div>
+            <div class="flex">
+              <div class="my-auto">
+                <Fa icon={faMapMarkerAlt} />
               </div>
-            </a>
-          {/if}
-        </div>
-        {#if subject.bio}
-          <p>{subject.bio}</p>
-        {/if}
-        {#if $session?.user}
-          {#if $session.user.id === subject.id}
-            <Menu {messages} />
-          {:else}
-            <div class="flex space-x-5">
-              <button class="p-2 primary-btn follow mt-8" on:click={follow}>
-                {subject.followed ? "Unfollow" : "Follow"}</button
-              >
-              <button
-                class="p-2 primary-btn mt-8"
-                on:click={() => {
-                  $messageUser = { id: subject.id, username: subject.username };
-                  prompt.set(SendMessage);
-                }}
-              >
-                Message</button
-              >
+              <div><span>{subject.location}</span></div>
             </div>
           {/if}
+          <div class="flex cursor-pointer">
+            <div class="my-auto">
+              <Fa icon={faWallet} />
+            </div>
+            <div on:click={toggleQr} class="truncate">
+              <span>{subject.address}</span>
+            </div>
+          </div>
+        </div>
+        {#if showQr}
+          <div
+            class="w-full cursor-pointer font-semibold text-xs text-center"
+            on:click={() => copy(subject.address)}
+          >
+            <img src={qr} class="w-64 mx-auto" alt="QR Code" />
+            <div>
+              {subject.address}
+            </div>
+          </div>
         {/if}
       </div>
 
@@ -167,7 +226,7 @@
           >
             Collection
           </div>
-          {#if $session?.user && $session.user.id === id}
+          {#if $user && $user.id === id}
             <div
               class:hover={tab === "offers"}
               on:click={() => (tab = "offers")}
@@ -185,7 +244,7 @@
         {#if tab === "creations"}
           <div class="w-full justify-center">
             <div class="w-full max-w-sm mx-auto mb-12">
-              {#if $session?.user?.is_artist && $session?.user?.id === subject.id}
+              {#if $user?.is_artist && $user?.id === subject.id}
                 <a href="/a/create" class="primary-btn">Create New Artwork</a>
               {/if}
             </div>
@@ -269,10 +328,9 @@
   .social-details {
     display: flex;
     flex-direction: column;
-    margin: 25px 0;
   }
-  .social-details a {
-    margin-top: 15px;
+  .social-details div.flex {
+    @apply mb-2;
   }
 
   .social-details a:hover,

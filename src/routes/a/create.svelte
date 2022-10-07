@@ -2,7 +2,6 @@
   import { page, session } from "$app/stores";
   import Fa from "svelte-fa";
   import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-  import { v4 } from "uuid";
   import { query, api } from "$lib/api";
   import { tick, onDestroy } from "svelte";
   import {
@@ -52,7 +51,7 @@
       percent = 1;
       preview = e.target.result;
       await tick();
-      if (type.includes("video")) {
+      if (!type || type.includes("video")) {
         preview = URL.createObjectURL(file);
       } else {
         url = preview;
@@ -93,7 +92,6 @@
       return;
     }
 
-    url = `/api/ipfs/${artwork.filename}`;
     await tick();
   };
 
@@ -176,7 +174,7 @@
           transactions,
         })
         .json();
-
+      
       goto(`/a/${slug}`);
     } catch (e) {
       console.log(e);

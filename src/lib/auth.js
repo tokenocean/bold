@@ -40,9 +40,12 @@ export const activate = (ticket) => {
 };
 
 export const checkAuthFromLocalStorage = (user) => {
-  const usernameFromStorage = window.sessionStorage.getItem("username");
+  const usernameFromStorage =
+    sessionStorage.getItem("username") &&
+    sessionStorage.getItem("username") !== "undefined" &&
+    JSON.parse(sessionStorage.getItem("username"));
 
-  if (usernameFromStorage && user.username !== usernameFromStorage) {
+  if (user.username !== usernameFromStorage) {
     goto("/logout");
   }
 };
@@ -51,12 +54,12 @@ export const checkToken = (headers) => {
   const cookies = cookie.parse(headers.get("cookie") || "");
   if (!cookies.token || expired(cookies.token)) {
     return {
-      headers: { location: '/login' },
+      headers: { location: "/logout" },
       status: 302,
-    } 
+    };
   } else {
     return {
-      authorization: `Bearer ${cookies.token}`
-    }
-  } 
-} 
+      authorization: `Bearer ${cookies.token}`,
+    };
+  }
+};

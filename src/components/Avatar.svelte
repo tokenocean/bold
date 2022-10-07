@@ -1,77 +1,26 @@
 <script>
+  import { createPopperActions } from "svelte-popperjs";
+  import { UserPopup } from "$comp";
+  import { network } from "$lib/wallet";
+  import OutClick from "svelte-outclick";
+  import { user as currentuser } from "$lib/store";
+
   export let user = undefined;
   export let src = undefined;
   export let overlay = undefined;
   export let size = "small";
-  import { session } from "$app/stores";
-  import { messageUser, prompt, tipUser } from "$lib/store";
-  import { createPopperActions } from "svelte-popperjs";
-  import { SendMessage, SendTip } from "$comp";
-  import { goto } from "$lib/utils";
-  import Fa from "svelte-fa";
-  import {
-    faWallet,
-    faUserCircle,
-    faEnvelopeOpen,
-  } from "@fortawesome/free-solid-svg-icons";
-  import OutClick from "svelte-outclick";
+  export let disablePopup = false;
 
   const [popperRef, popperContent] = createPopperActions({
     placement: "right",
   });
-  const extraOpts = {
-    modifiers: [{ name: "offset", options: { offset: [0, 8] } }],
-  };
 
-  let showTooltip = false;
+  let showPopup = false;
 </script>
 
-{#if showTooltip}
-  <OutClick on:outclick={() => (showTooltip = false)}>
-    <div
-      id="tooltip"
-      use:popperContent={extraOpts}
-      class="bg-primary p-4 rounded-lg border border-black/25 shadow-lg z"
-    >
-      <div class="space-y-2">
-        <button
-          class="text-black block font-medium border border-black/25 rounded-full px-2 py-1 flex items-center w-32 justify-center"
-          on:click={() => {
-            showTooltip = false;
-            goto(`/${user.username}`);
-          }}
-        >
-          <Fa icon={faUserCircle} class="mr-1" /> Profile
-        </button>
-        <button
-          class="text-black block font-medium border border-black/25 rounded-full px-2 py-1 flex items-center w-32 justify-center"
-          on:click={() => {
-            showTooltip = false;
-            if (!$session.user) {
-              goto("/login");
-            } else {
-              $messageUser = { id: user.id, username: user.username };
-              prompt.set(SendMessage);
-            }
-          }}
-        >
-          <Fa icon={faEnvelopeOpen} class="mr-1" /> Message</button
-        >
-        <button
-          class="text-black block font-medium border border-black/25 rounded-full px-2 py-1 flex items-center w-32 justify-center"
-          on:click={() => {
-            showTooltip = false;
-            if (!$session.user) {
-              goto("/login");
-            } else {
-              $tipUser = { username: user.username, address: user.address };
-              prompt.set(SendTip);
-            }
-          }}><Fa icon={faWallet} class="mr-1" /> Tip</button
-        >
-      </div>
-      <div id="arrow" data-popper-arrow />
-    </div>
+{#if showPopup}
+  <OutClick on:outclick={() => (showPopup = false)}>
+    <UserPopup bind:showPopup {user} {popperContent} />
   </OutClick>
 {/if}
 
@@ -79,15 +28,16 @@
   class={`${size} my-auto relative`}
   use:popperRef
   on:click={(e) => {
-    if (!$session.user || (user && $session.user.username !== user.username)) {
+    if (user && (!$currentuser || (user && $currentuser.username !== user.username)) && !disablePopup) {
       e.preventDefault();
       e.stopPropagation();
-      showTooltip = !showTooltip;
+      showPopup = !showPopup;
     }
   }}
 >
   <div
-    class={`relative ${size} group rounded-full overflow-hidden shadow-inner text-center cursor-pointer`}
+    class={`relative ${size} group rounded-full overflow-hidden shadow-inner text-center`}
+           class:cursor-pointer={user}
   >
     {#if user || src}
       <img

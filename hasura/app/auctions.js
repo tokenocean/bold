@@ -2,6 +2,8 @@ import { api, q } from "./api.js";
 import { formatISO, compareAsc, parseISO } from "date-fns";
 import { combine, release, sign, broadcast } from "./wallet.js";
 import { check } from "./signing.js";
+import { mail } from "./mail.js";
+import { getUserById } from "./utils.js";
 import {
   cancelBids,
   closeAuction,
@@ -9,7 +11,7 @@ import {
   releaseToken,
 } from "./queries.js";
 
-setInterval(async () => {
+let checkAuctions = async () => {
   try {
     let { artworks } = await q(getFinishedAuctions, {
       now: formatISO(new Date()),
@@ -29,7 +31,6 @@ setInterval(async () => {
 
       console.log("finalizing auction for", artwork.slug);
       console.log("reserve price", artwork.reserve_price);
-
       try {
         if (
           !(bid && bid.psbt) ||
@@ -39,6 +40,7 @@ setInterval(async () => {
         )
           throw new Error("no bid");
 
+        let user = await getUserById(bid.user.id)
         let combined = combine(artwork.auction_tx, bid.psbt);
 
         await check(combined);
@@ -57,21 +59,43 @@ setInterval(async () => {
           bid_id: bid.id,
           type: "release",
         });
-
+        
         console.log("released to high bidder");
+
+        try {
+          let result = await mail.send({
+            template: "purchase-successful",
+            locals: {
+              userName: bid.user.username,
+              artworkUrl: artwork.slug,
+              artworkTitle: artwork.title,
+              bidAmount: bid.amount
+            },
+            message: {
+              to: user.display_name
+            }
+          })
+        } catch (e) {
+          console.log(e);
+        }
       } catch (e) {
         console.log("couldn't release to bidder,", e.message);
 
-        await q(cancelBids, {
-          id: artwork.id,
-          start: artwork.auction_start,
-          end: artwork.auction_end,
-        });
+        try {
+          await q(cancelBids, {
+            artwork_id: artwork.id,
+            start: artwork.auction_start,
+            end: artwork.auction_end,
+          });
+        } catch (e) {
+          console.log("problem cancelling bids", e);
+        }
 
         if (artwork.has_royalty) continue;
 
+        let psbt;
         try {
-          let psbt = await sign(artwork.auction_release_tx);
+          psbt = await sign(artwork.auction_release_tx);
           await broadcast(psbt);
 
           console.log("released to current owner");
@@ -86,11 +110,15 @@ setInterval(async () => {
             type: "return",
           });
         } catch (e) {
-          console.log("problem releasing", e);
+          console.log("problem releasing", psbt.toBase64(), e);
         }
       }
     }
   } catch (e) {
     console.log(e);
   }
-}, 2000);
+
+  setTimeout(checkAuctions, 2000);
+};
+
+checkAuctions();

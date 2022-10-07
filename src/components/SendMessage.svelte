@@ -1,16 +1,38 @@
 <script>
   import { createMessage } from "$queries/messages";
-  import { query } from "$lib/api";
-  import { messageUser, prompt } from "$lib/store";
-  import { info, err } from "$lib/utils";
+  import { api, query } from "$lib/api";
+  import { messageUser, prompt, token } from "$lib/store";
+  import { info, err, encrypt } from "$lib/utils";
+  import { keypair } from "$lib/wallet";
+  import { requirePassword } from "$lib/auth";
+  import { onMount } from "svelte";
   let sendMessage;
+
+  let ownPrivKey;
+  let ownPubKey;
+  onMount(async () => {
+    await requirePassword();
+    ownPrivKey = keypair().privkey.toString("hex");
+    ownPubKey = keypair().pubkey.toString("hex").substring(2);
+  });
+
   export async function submit() {
     try {
+      let encryptedMessage = encrypt(
+        ownPrivKey,
+        $messageUser.pubkey,
+        sendMessage
+      );
+
       await query(createMessage, {
         message: {
-          message: sendMessage,
+          message: encryptedMessage,
           to: $messageUser.id,
         },
+      });
+
+      await api.url("/mail-message-received").auth(`Bearer ${$token}`).post({
+        userId: $messageUser.id,
       });
 
       $prompt = undefined;

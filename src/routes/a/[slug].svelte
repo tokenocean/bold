@@ -1,9 +1,10 @@
 <script context="module">
-  import { api, post } from "$lib/api";
+  import { newapi as api, post } from "$lib/api";
   import { browser } from "$app/env";
   import branding from "$lib/branding";
-  import { host } from "$lib/utils";
+  import { host, satsFormatted, updateBitcoinUnit } from "$lib/utils";
   import Comments from "./_comments.svelte";
+  import { bitcoinUnitLocal } from "$lib/store";
 
   export async function load({ fetch, params: { slug } }) {
     const props = await fetch(`/artworks/${slug}.json`).then((r) => r.json());
@@ -15,7 +16,12 @@
         status: 404,
       };
 
-    await post("/artworks/held", { id: artwork.id }, fetch).res();
+    try {
+      await post("/artworks/held", { id: artwork.id }, fetch).res();
+    } catch (e) {
+      console.log(e);
+    }
+
     if (!browser) {
       try {
         await post("/artworks/viewed", { id: artwork.id }, fetch).res();
@@ -51,7 +57,7 @@
 
 <script>
   import { session } from "$app/stores";
-  import { token } from "$lib/store";
+  import { user, token, fiatRates } from "$lib/store";
   import Fa from "svelte-fa";
   import {
     faChevronDown,
@@ -68,9 +74,10 @@
     Head,
     ProgressLinear,
     RoyaltyInfo,
+    Fiat,
   } from "$comp";
   import Sidebar from "./_sidebar.svelte";
-  import { tick, onDestroy } from "svelte";
+  import { tick, onDestroy, onMount } from "svelte";
   import { art, meta, prompt, password, psbt, commentsLimit } from "$lib/store";
   import countdown from "$lib/countdown";
   import {
@@ -99,7 +106,7 @@
   export let artwork, others, metadata, views;
 
   let release = async () => {
-    await requirePassword($session);
+    await requirePassword();
     $psbt = await releaseToSelf(artwork);
     $psbt = await sign();
     $psbt = await requestSignature($psbt);
@@ -108,14 +115,29 @@
 
   $: disabled =
     loading ||
-    (artwork.owner_id === $session.user?.id && underway(artwork)) ||
+    (artwork.owner_id === $session?.user?.id && underway(artwork)) ||
     artwork.transactions.some(
       (t) => ["purchase", "creation", "cancel"].includes(t.type) && !t.confirmed
     );
 
-  let start_counter, end_counter, now, timeout;
+  let start_counter,
+    end_counter,
+    now,
+    auctionTimeout,
+    refreshTimeout,
+    list_price,
+    val,
+    sats,
+    ticker,
+    amount;
 
+  let transaction = {};
+
+  let refreshInterval = 5000;
   let refreshArtwork = async () => {
+    if (!artwork) return;
+    clearTimeout(refreshTimeout);
+
     try {
       let { artworks } = await query(getArtworkBySlug, {
         slug: artwork.slug,
@@ -126,27 +148,27 @@
     } catch (e) {
       console.log(e);
     }
-  };
 
-  let poll = setInterval(refreshArtwork, 2500);
+    refreshTimeout = setTimeout(refreshArtwork, refreshInterval);
+  };
 
   onDestroy(() => {
     $art = undefined;
-    clearInterval(poll);
+    clearTimeout(auctionTimeout);
+    clearTimeout(refreshTimeout);
   });
 
-  $: update(artwork);
   let update = () => {
     if (!artwork) return;
     $art = artwork;
 
     let count = () => {
-      clearTimeout(timeout);
+      clearTimeout(auctionTimeout);
       now = new Date();
       if (!artwork) return;
       start_counter = countdown(parseISO(artwork.auction_start)) || "";
       end_counter = countdown(parseISO(artwork.auction_end)) || "";
-      timeout = setTimeout(count, 1000);
+      auctionTimeout = setTimeout(count, 1000);
     };
     count();
 
@@ -155,21 +177,23 @@
     list_price = val(artwork.list_price);
   };
 
-  let list_price;
-  let val, sats, ticker;
-  let amount;
+  refreshArtwork();
+  update();
 
-  let transaction = {};
   let makeOffer = async (e) => {
     try {
       if (e) e.preventDefault();
       offering = true;
+      if (ticker === "L-BTC" && $bitcoinUnitLocal === "sats") {
+        transaction.amount = sats(amount / 100000000);
+      } else {
+        transaction.amount = sats(amount);
+      }
 
-      transaction.amount = sats(amount);
       transaction.asset = artwork.asset;
       transaction.type = "bid";
 
-      await requirePassword($session);
+      await requirePassword();
 
       $psbt = await createOffer(artwork, transaction.amount);
       $psbt = await sign();
@@ -180,13 +204,10 @@
       await save();
       await refreshArtwork();
 
-      await api
-        .url("/offer-notifications")
-        .auth(`Bearer ${$token}`)
-        .post({
-          artworkId: artwork.id,
-          transactionHash: transaction.hash,
-        });
+      await api().url("/offer-notifications").post({
+        artworkId: artwork.id,
+        transactionHash: transaction.hash,
+      });
 
       offering = false;
     } catch (e) {
@@ -200,8 +221,7 @@
     transaction.artwork_id = artwork.id;
     transaction.asset = artwork.asking_asset;
 
-    let { data, errors } = await api
-      .auth(`Bearer ${$token}`)
+    let { data, errors } = await api()
       .url("/transaction")
       .post({ transaction })
       .json();
@@ -246,15 +266,12 @@
       await save();
       await refreshArtwork();
 
-      await api
-        .url("/mail-purchase-successful")
-        .auth(`Bearer ${$token}`)
-        .post({
-          userId: $session.user.id,
-          artworkId: artwork.id,
-        });
+      await api().url("/mail-purchase-successful").post({
+        userId: $user.id,
+        artworkId: artwork.id,
+      });
 
-      await api.url("/mail-artwork-sold").auth(`Bearer ${$token}`).post({
+      await api().url("/mail-artwork-sold").post({
         userId: artwork.owner.id,
         artworkId: artwork.id,
       });
@@ -277,9 +294,79 @@
     }
   };
 
+  $: handleUnitChange($bitcoinUnitLocal);
+
+  let handleUnitChange = () => {
+    if (!amount) return;
+    amount =
+      ticker === "L-BTC" && $bitcoinUnitLocal === "sats"
+        ? sats(amount)
+        : val(amount);
+  };
+
   let showPopup = false;
   let showMore = false;
   let showActivity = false;
+
+  $: bidFiatAmount = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: $user ? $user.fiat : "USD",
+    signDisplay: "never",
+  }).format(
+    (artwork.bid && artwork.bid.amount) *
+      ($fiatRates[$user ? $user.fiat : "USD"] / 100000000)
+  );
+
+  $: listFiatPrice = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: $user ? $user.fiat : "USD",
+    signDisplay: "never",
+  }).format(
+    list_price *
+      100000000 *
+      ($fiatRates[$user ? $user.fiat : "USD"] / 100000000)
+  );
+
+  $: reserveFiatPrice = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: $user ? $user.fiat : "USD",
+    signDisplay: "never",
+  }).format(
+    artwork.reserve_price * ($fiatRates[$user ? $user.fiat : "USD"] / 100000000)
+  );
+
+  $: inputFiatAmount = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: $user ? $user.fiat : "USD",
+    signDisplay: "never",
+  }).format(
+    (amount
+      ? tickerCalculated === "L-sats"
+        ? amount
+        : ticker === "L-BTC"
+        ? amount * 100000000
+        : 0
+      : 0) *
+      ($fiatRates[$user ? $user.fiat : "USD"] / 100000000)
+  );
+
+  $: tickerCalculated =
+    ticker === "L-BTC" && $bitcoinUnitLocal === "sats" ? "L-sats" : ticker;
+
+  $: listPrice =
+    ticker === "L-BTC" && $bitcoinUnitLocal === "sats"
+      ? satsFormatted(list_price * 100000000)
+      : list_price;
+
+  $: reservePrice =
+    ticker === "L-BTC" && $bitcoinUnitLocal === "sats"
+      ? satsFormatted(artwork.reserve_price)
+      : val(artwork.reserve_price);
+
+  $: bidAmount =
+    ticker === "L-BTC" && $bitcoinUnitLocal === "sats"
+      ? satsFormatted(artwork.bid && artwork.bid.amount)
+      : val(artwork.bid && artwork.bid.amount);
 </script>
 
 <Head {metadata} />
@@ -331,15 +418,15 @@
               <div class="text-xs text-gray-600">Owner</div>
             </div>
           </div>
-          </a>
-        {/if}
-        {#if !artwork.held}
-          <a href="https://bitcoin.org/bitcoin.pdf">
+        </a>
+
+        {#if artwork.artist_id !== artwork.owner_id}
+          <a href={`/${artwork.owner.username}`}>
             <div class="flex mb-6 secondary-color">
-              <Avatar src="/satoshi.jpg" />
+              <Avatar user={artwork.owner} />
               <div class="ml-2">
-                <div>@anon</div>
-                <div class="text-xs text-gray-600">Token Held Externally</div>
+                <div>@{artwork.owner.username}</div>
+                <div class="text-xs text-gray-600">Owner</div>
               </div>
             </div>
           </a>
@@ -356,22 +443,64 @@
         {#if artwork.list_price}
           <div class="my-2">
             <div class="text-sm mt-auto">List Price</div>
-            <div class="text-lg">{list_price} {ticker}</div>
+            <button
+              on:click={() =>
+                updateBitcoinUnit(
+                  $bitcoinUnitLocal === "sats" ? "btc" : "sats"
+                )}
+              disabled={ticker !== "L-BTC"}
+              class="text-lg"
+            >
+              {listPrice}
+              {tickerCalculated}
+            </button>
+            {#if ticker !== "L-CAD" && ticker !== "L-USDt"}
+              <div class="text-sm">
+                <Fiat amount={listFiatPrice} />
+              </div>
+            {/if}
           </div>
         {/if}
         {#if artwork.reserve_price}
           <div class="my-2">
             <div class="text-sm mt-auto">Reserve Price</div>
-            <div class="flex-1 text-lg">
-              {val(artwork.reserve_price)}
-              {ticker}
-            </div>
+            <button
+              on:click={() =>
+                updateBitcoinUnit(
+                  $bitcoinUnitLocal === "sats" ? "btc" : "sats"
+                )}
+              disabled={ticker !== "L-BTC"}
+              class="flex-1 text-lg"
+            >
+              {reservePrice}
+              {tickerCalculated}
+            </button>
+            {#if ticker !== "L-CAD" && ticker !== "L-USDt"}
+              <div class="text-sm">
+                <Fiat amount={reserveFiatPrice} />
+              </div>
+            {/if}
           </div>
         {/if}
         {#if artwork.bid && artwork.bid.amount}
           <div class="my-2">
-            <div class="text-sm mt-auto">Current Bid</div>
-            <div class="text-lg">{val(artwork.bid.amount)} {ticker}</div>
+            <div class="text-sm mt-auto">Current bid</div>
+            <button
+              on:click={() =>
+                updateBitcoinUnit(
+                  $bitcoinUnitLocal === "sats" ? "btc" : "sats"
+                )}
+              disabled={ticker !== "L-BTC"}
+              class="text-lg"
+            >
+              {bidAmount}
+              {tickerCalculated}
+            </button>
+            {#if ticker !== "L-CAD" && ticker !== "L-USDt"}
+              <div class="text-sm">
+                <Fiat amount={bidFiatAmount} />
+              </div>
+            {/if}
           </div>
         {/if}
       </div>
@@ -380,7 +509,7 @@
 
       {#if loading}
         <ProgressLinear />
-      {:else if $session.user && $session.user.id === artwork.owner_id && artwork.held}
+      {:else if $session?.user?.id === artwork.owner_id && artwork.held}
         <div class="w-full mb-2">
           <a
             sveltekit:prefetch
@@ -407,7 +536,7 @@
           >
         </div>
 
-        {#if $session.user.id === artwork.artist_id}
+        {#if $session?.user?.id === artwork.artist_id}
           <div class="w-full mb-2">
             <a
               href={`/a/${artwork.slug}/edit`}
@@ -451,9 +580,14 @@
                     <div
                       class="absolute inset-y-0 right-0 flex items-center mr-2"
                     >
-                      {ticker}
+                      {tickerCalculated}
                     </div>
                   </div>
+                  {#if ticker !== "L-CAD" && ticker !== "L-USDt"}
+                    <div class="flex justify-end">
+                      <Fiat style="text-sm" amount={inputFiatAmount} />
+                    </div>
+                  {/if}
                 </div>
               </div>
               <button type="submit" class="secondary-btn">Submit</button>

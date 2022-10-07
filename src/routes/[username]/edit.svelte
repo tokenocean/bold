@@ -7,7 +7,6 @@
 </script>
 
 <script>
-  import { session } from "$app/stores";
   import Fa from "svelte-fa";
   import {
     faImage,
@@ -23,6 +22,7 @@
   import { upload } from "$lib/upload";
   import { updateUser } from "$queries/users";
   import { query } from "$lib/api";
+  import { user, username } from "$lib/store";
 
   export let form;
 
@@ -77,11 +77,13 @@
         wallet_initialized,
         mnemonic,
         has_samples,
+        user: u,
         ...rest
       } = form;
-      $session.user = { ...$session.user, ...rest };
+      $user = { ...$user, ...rest };
 
       await query(updateUser, { user: rest, id });
+      $username = rest.username;
       info("Profile updated");
       goto(`/${rest.username}`);
     } catch (e) {
@@ -96,7 +98,7 @@
     <div
       class="mb-4 w-full sm:max-w-3xl md:shadow rounded-xl md:p-10 m-auto lg:flex-row  bg-white"
     >
-      <a class="block mb-6 text-midblue" href={`/${$session.user.username}`}>
+      <a class="block mb-6 text-midblue" href={`/${$user.username}`}>
         <div class="flex">
           <Fa icon={faChevronLeft} class="my-auto mr-1" />
           <div>Back</div>
@@ -155,14 +157,6 @@
             <label for="bio">Profile Bio</label>
             <textarea placeholder="" bind:value={form.bio} />
           </div>
-          <div class="flex flex-col mb-4">
-            <label for="prompt_sign">Request Signing of Transactions</label>
-            <input
-              type="checkbox"
-              id="prompt_sign"
-              bind:checked={form.prompt_sign}
-            />
-          </div>
           <div class="flex mt-8">
             <button on:click|preventDefault={submit} class="primary-btn "
               >Save Details</button
@@ -173,7 +167,7 @@
           class="text-center mx-auto lg:ml-10 mb-10"
           on:click={() => fileInput.click()}
         >
-          <Avatar size="xl" src={preview || $session.user.avatar_url} />
+          <Avatar size="xl" src={preview || $user.avatar_url} />
           <button class="text-lightblue mt-5"
             >UPDATE AVATAR
             <Fa icon={faImage} pull="right" class="mt-1 ml-2" /></button

@@ -1,7 +1,6 @@
 <svelte:options accessors={true} />
 
 <script>
-  import { session } from "$app/stores";
   import Fa from "svelte-fa";
   import {
     faUserSecret,
@@ -12,15 +11,33 @@
   import { faClone } from "@fortawesome/free-regular-svg-icons";
   import { ProgressLinear } from "$comp";
   import { onDestroy, onMount, tick } from "svelte";
-  import qrcode from "qrcode-generator-es6";
-  import { balances, error, locked, pending, prompt, token } from "$lib/store";
-  import { assetLabel, btc, copy, err, fullscreen, ticker, val } from "$lib/utils";
-  import { getBalances } from "$lib/wallet";
+  import qrcode from "qrcode";
+  import {
+    confirmed as confirmedUtxos,
+    unconfirmed,
+    error,
+    locked,
+    prompt,
+    user,
+    token,
+    bitcoinUnitLocal,
+  } from "$lib/store";
+  import {
+    assetLabel,
+    btc,
+    copy,
+    err,
+    fullscreen,
+    ticker,
+    val,
+    satsFormatted,
+  } from "$lib/utils";
+  import { getBalance } from "$lib/wallet";
   import { api } from "$lib/api";
 
   let tab = "liquid";
 
-  let img, loading, explainer, amount, confirming, confirmed;
+  let loading, explainer, amount, confirming;
 
   $: amount = val(
     $error.asset,
@@ -31,12 +48,12 @@
   $: getLabel($error);
   let getLabel = async ({ asset }) => {
     label = (await assetLabel(asset)) || ticker(asset);
-  } 
-  
+  };
+
   $: amountUpdated(amount);
   let amountUpdated = (a) => isNaN(a) && ($prompt = undefined);
 
-  let url = `liquidnetwork:${$session.user.address}?amount=${amount}`;
+  let url = `liquidnetwork:${$user.address}?amount=${amount}`;
 
   let showInvoice = false;
   let toggle = () => {
@@ -45,28 +62,27 @@
 
   $: updateAddress(address);
 
-  let updateAddress = (address) => {
+  let qr;
+  let updateAddress = async (address) => {
     if (!address) return;
-    const qr = new qrcode(0, "H");
     if (address.startsWith("bc"))
       address = `bitcoin:${address}?amount=${amount}`;
-    qr.addData(address);
-    qr.make();
-    img = qr.createSvgTag({});
+    qr = await qrcode.toDataURL(address);
   };
 
   onDestroy(() => clearInterval(poll));
-  let poll = setInterval(() => getBalances(), 5000);
+  let poll = setInterval(() => getBalance($error.asset), 5000);
 
+  let confirmed = false;
   let confidential = false;
   let toggleConfidential = () => {
     confidential = !confidential;
     if (confidential) liquid();
-    else address = $session.user.address;
+    else address = $user.address;
   };
 
-  $: current = ($balances && $balances[$error.asset]) || 0;
-  $: incoming = ($pending && $pending[$error.asset]) || 0;
+  $: current = ($confirmedUtxos && $confirmedUtxos[$error.asset]) || 0;
+  $: incoming = ($unconfirmed && $unconfirmed[$error.asset]) || 0;
   $: incoming && (confirming = true);
   $: newBalance(current);
   let newBalance = () => {
@@ -98,7 +114,7 @@
         .auth(`Bearer ${$token}`)
         .post({
           amount: Math.max($error.amount, 1000),
-          liquidAddress: $session.user.address,
+          liquidAddress: $user.address,
         })
         .json());
     } catch (e) {
@@ -113,7 +129,7 @@
 
     if (!confidential) {
       explainer = false;
-      address = $session.user.address;
+      address = $user.address;
       return;
     }
 
@@ -126,7 +142,7 @@
         .auth(`Bearer ${$token}`)
         .post({
           amount: Math.max($error.amount, 1000),
-          liquidAddress: $session.user.address,
+          liquidAddress: $user.address,
         })
         .json());
     } catch (e) {
@@ -146,7 +162,7 @@
         .auth(`Bearer ${$token}`)
         .post({
           amount: Math.max($error.amount, 1000),
-          liquidAddress: $session.user.address,
+          liquidAddress: $user.address,
         })
         .json());
     } catch (e) {
@@ -157,7 +173,20 @@
   };
 
   let address;
-  $: if ($session.user) address = $session.user.address;
+  $: if ($user) address = $user.address;
+
+  $: labelCalculated =
+    label === "L-BTC" && $bitcoinUnitLocal === "sats" ? "L-sats" : label;
+
+  $: currentBalance =
+    label === "L-BTC" && $bitcoinUnitLocal === "sats"
+      ? satsFormatted(val($error.asset, parseInt(current)) * 100000000)
+      : val($error.asset, parseInt(current));
+
+  $: fundsRequired =
+    label === "L-BTC" && $bitcoinUnitLocal === "sats"
+      ? satsFormatted(amount * 100000000)
+      : amount;
 </script>
 
 <div class="mb-2 rounded-lg">
@@ -184,13 +213,16 @@
       <div class="w-1/2">
         <div class="text-xs mt-6">Current Balance</div>
         <div class="text-xl">
-          {val($error.asset, parseInt(current))}
-          {label}
+          {currentBalance}
+          {labelCalculated}
         </div>
       </div>
       <div class="w-1/2">
         <div class="text-xs mt-6">Funds Required</div>
-        <div class="text-xl">{amount} {label}</div>
+        <div class="text-xl">
+          {fundsRequired}
+          {labelCalculated}
+        </div>
       </div>
     </div>
 
@@ -232,7 +264,7 @@
     {/if}
     <div class="mb-2 flex justify-center flex-col">
       <div class="flex mb-2 mx-auto w-4/5" class:invisible={loading}>
-        {@html img}
+        <img src={qr} class="w-full" alt="QR Code" />
       </div>
       {#if loading}
         <ProgressLinear />

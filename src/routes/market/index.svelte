@@ -1,19 +1,4 @@
-<script context="module">
-  import { post } from "$lib/api";
-  export async function load({ fetch }) {
-    const r = await post("/artworks.json", {}, fetch).json();
-
-    return {
-      props: {
-        total: r.total,
-        initialArtworks: r.artworks,
-      },
-    };
-  }
-</script>
-
 <script>
-  import { session } from "$app/stores";
   import { ProgressLinear } from "$comp";
   import Fa from "svelte-fa";
   import { faSlidersH } from "@fortawesome/free-solid-svg-icons";
@@ -24,13 +9,14 @@
     results,
     show,
     sortCriteria as sc,
+    user
   } from "$lib/store";
-  import { info, err, goto } from "$lib/utils";
+  import { info, err, goto, btc, usd, cad } from "$lib/utils";
   import { Gallery, Results, Search } from "$comp";
   import Filter from "./_filter.svelte";
   import Sort from "./_sort.svelte";
   import { requirePassword } from "$lib/auth";
-  import { compareAsc, differenceInMilliseconds, parseISO } from "date-fns";
+  import { compareAsc, parseISO } from "date-fns";
   import { browser } from "$app/env";
 
   export let total;
@@ -60,6 +46,32 @@
       if ($fc.hasSold) where.transferred_at = { _is_null: false };
       if ($fc.isPhysical) where.is_physical = { _eq: true };
       if ($fc.hasRoyalties) where.has_royalty = { _eq: true };
+      if ($fc.isFavorited) where.favorited = { _eq: true };
+      if ($fc.hasOpenAuction) {
+        where.auction_start = { _lte: new Date(), _is_null: false };
+        where.auction_end = { _gt: new Date(), _is_null: false };
+      }
+      if ($fc.filterByCurrency) {
+        switch($fc.selectedCurrency) {
+          case "L-BTC":
+            where.asking_asset = { _eq: btc };
+            break;
+          case "L-USDT":
+            where.asking_asset = { _eq: usd };
+            break;
+          case "L-CAD":
+            where.asking_asset = { _eq: cad };
+            break;
+        }
+      }
+
+      if ($user && $fc.fromFollowed) {
+        let follows = $user.user.follows.map((u) => u.user_id);
+        where._or = {
+          artist: { id: { _in: follows } },
+          owner: { id: { _in: follows } },
+        };
+      }
 
       let order_by = {
         newest: { created_at: "desc" },
@@ -70,16 +82,16 @@
         most_viewed: { views: "desc" },
       }[$sc];
 
-      const r = await post(
-        "/artworks.json",
-        { offset: $offset, order_by, where },
-        fetch
-      ).json();
+      const r = await fetch("/artworks", {
+        method: "POST",
+        body: JSON.stringify({ offset: $offset, order_by, where }),
+        headers: { "content-type": "application/json" },
+      }).then((r) => r.json());
 
       filtered = [...r.artworks];
       total = r.total;
     } catch (e) {
-      console.log(e);
+      console.log("problem fetching artworks", e);
     }
   };
 </script>
@@ -90,7 +102,7 @@
   class="container mx-auto flex flex-wrap flex-col-reverse md:flex-row sm:justify-between mt-10 md:mt-20"
 >
   <h2 class="md:mb-0">Gallery</h2>
-  {#if $session.user && $session.user.is_artist}
+  {#if $user && $user.is_artist}
     <a href="/a/create" class="primary-btn" data-cy="new-artwork"
       >Create New Artwork</a
     >
@@ -105,7 +117,7 @@
   <div
     class="flex flex-wrap justify-between items-center flex-row-reverse controls py-10"
   >
-    <div class="w-full flex filter-container justify-between">
+    <div class="w-full flex items-center filter-container justify-between">
       <div class="switch">
         <div
           class="flex cursor-pointer font-bold"
